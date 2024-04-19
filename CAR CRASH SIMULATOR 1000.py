@@ -25,19 +25,26 @@ class OpenScreen:
         self.LevelVar.set(1)
         self.Level = OptionMenu(self.topFrame, self.LevelVar, *self.LevelList,)
 
-        
         self.LevelLabel.pack()
         self.Level.pack()
 
         self.StartButton = Button(self.topFrame, text = 'Start')
         self.StartButton.pack()
 
-        self.InstructionsButton = Button(self.topFrame, text = 'Instructions')
+        self.InstructionsButton = Button(self.topFrame, text = 'Instructions',command = self.getinfo)
         self.InstructionsButton.pack()
 
-        #def start():
+    def getinfo(self):
+        self.newWindow = Toplevel(root)
+        with open("CCS_Info.txt","r") as self.file:
+            self.result = self.file.read()
+        self.text = Text(self.newWindow, font = self.font)
+        self.text.pack()
+        self.text.insert(END,self.result)
 
-        #def getinfo():
+    #def start(self):
+
+
 
 
 
