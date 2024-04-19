@@ -25,6 +25,7 @@ class OpenScreen:
         self.LevelVar.set(1)
         self.Level = OptionMenu(self.topFrame, self.LevelVar, *self.LevelList,)
 
+        
         self.LevelLabel.pack()
         self.Level.pack()
 
