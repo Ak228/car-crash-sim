@@ -1,8 +1,16 @@
+#Car Crash Simulator
+
 import arcade
 from tkinter import *
 import random
 
-class OpenScreen:
+SPRITE_SCALING_CAR = 1
+SPRITE_SCALING_PED = 0.2
+MOVEMENT_SPEED = 2
+SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 700
+
+class OpenScreen(arcade.Window):
 
     def __init__(self,root):
         self.root = root
@@ -35,16 +43,34 @@ class OpenScreen:
         self.InstructionsButton.pack()
 
     def getinfo(self):
+
         self.newWindow = Toplevel(root)
+
         with open("CCS_Info.txt","r") as self.file:
             self.result = self.file.read()
+
         self.text = Text(self.newWindow, font = self.font)
         self.text.pack()
         self.text.insert(END,self.result)
 
-    #def start(self):
+    def start(self):
+
+        if self.Level.get == 1:
+            #lvlone = LevelOne()
+
+        if self.Level.get == 2:
+            #lvltwo = LevelTwo()
+
+        if self.Level.get == 2:
+            #lvlthree = LevelThree()
 
 
+
+#class LevelOne(arcade.view):
+
+#class LevelTwo(arcade.view):
+
+#class LevelThree(arcade.view):
 
 
 
