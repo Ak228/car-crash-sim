@@ -36,7 +36,7 @@ class OpenScreen(arcade.Window):
         self.LevelLabel.pack()
         self.Level.pack()
 
-        self.StartButton = Button(self.topFrame, text = 'Start')
+        self.StartButton = Button(self.topFrame, text = 'Start', command=self.start)
         self.StartButton.pack()
 
         self.InstructionsButton = Button(self.topFrame, text = 'Instructions',command = self.getinfo)
@@ -55,22 +55,19 @@ class OpenScreen(arcade.Window):
 
     def start(self):
 
-        if self.Level.get() == 1:
-            #lvlone = LevelOne()
-
-        elif self.Level.get() == 2:
-            #lvltwo = LevelTwo()
-
-        elif self.Level.get() == 2:
-            #lvlthree = LevelThree()
+        if self.LevelVar.get() == '1':
+            self.lvlone = LevelOne()
+        elif self.LevelVar.get() == '2':
+            self.lvltwo = LevelTwo()
+        elif self.LevelVar.get() == '3':
+            self.lvlthree = LevelThree()
 
 
+class LevelOne():
 
-#class LevelOne(arcade.view):
 
-#class LevelTwo(arcade.view):
 
-#class LevelThree(arcade.view):
+
 
 
 
