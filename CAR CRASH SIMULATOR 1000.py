@@ -3,6 +3,7 @@
 import arcade
 from tkinter import *
 import random
+import math
 
 SPRITE_SCALING_CAR = 1
 SPRITE_SCALING_PED = 0.2
@@ -63,7 +64,7 @@ class OpenScreen(arcade.Window):
             self.lvlthree = LevelThree()
 
 
-class LevelOne():
+#class LevelOne():
 
 
 
