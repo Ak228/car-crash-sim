@@ -58,10 +58,10 @@ class OpenScreen(arcade.Window):
         if self.Level.get() == 1:
             #lvlone = LevelOne()
 
-        if self.Level.get() == 2:
+        elif self.Level.get() == 2:
             #lvltwo = LevelTwo()
 
-        if self.Level.get() == 2:
+        elif self.Level.get() == 2:
             #lvlthree = LevelThree()
 
 
