@@ -6,7 +6,7 @@ import random
 import math
 import time
 
-SPRITE_SCALING_CAR = 1
+SPRITE_SCALING_CAR = 10
 SPRITE_SCALING_PED = 0.2
 MOVEMENT_SPEED = 2
 SCREEN_WIDTH = 900
@@ -172,12 +172,16 @@ class LevelOne(arcade.Window):
         # Generate a list of all sprites that collided with the player.
         self.hit_list = arcade.check_for_collision_with_list(self.playerOne,
                                                         self.all_sprites_list)
+
         self.hit_list_2 = arcade.check_for_collision_with_list(self.playerTwo,
                                                                self.car_list)
 
         if self.playerOne in self.hit_list:
             self.playerOne.change_y = 0
             self.playerOne.change_x = 0
+        if self.playerTwo in self.hit_list_2:
+            self.playerTwo.change_y = 0
+            self.playerTwo.change_x = 0
 
 
 def start_game_one():
