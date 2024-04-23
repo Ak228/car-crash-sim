@@ -6,7 +6,7 @@ import random
 import math
 import time
 
-SPRITE_SCALING_CAR = 10
+SPRITE_SCALING_CAR = 1
 SPRITE_SCALING_PED = 0.2
 MOVEMENT_SPEED = 2
 SCREEN_WIDTH = 900
@@ -96,13 +96,13 @@ class LevelOne(arcade.Window):
 
 
         self.playerOne = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
-        self.playerOne_center_x = 50
-        self.playerOne_center_y = 50
+        self.playerOne.center_x = 50
+        self.playerOne.center_y = 50
         self.playerOne_list.append(self.playerOne)
 
         self.playerTwo = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
-        self.playerTwo_center_x = 500
-        self.playerTwo_center_y = 500
+        self.playerTwo.center_x = 600
+        self.playerTwo.center_y = 600
         self.playerTwo_list.append(self.playerTwo)
 
         self.all_sprites_list.append(self.playerTwo)
@@ -118,6 +118,8 @@ class LevelOne(arcade.Window):
         arcade.draw_lrwh_rectangle_textured(0, 0,
                                             SCREEN_WIDTH, SCREEN_HEIGHT,
                                             self.background)
+        self.all_sprites_list.draw()
+        self.car_list.draw()
 
     def on_key_press(self, key, modifiers):
 
@@ -160,8 +162,6 @@ class LevelOne(arcade.Window):
             self.playerTwo.change_x = 0
         elif key == arcade.key.D:
             self.playerTwo.change_x = 0
-
-
 
     def on_update(self, delta_time):
 
