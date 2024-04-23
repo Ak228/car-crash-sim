@@ -12,7 +12,7 @@ MOVEMENT_SPEED = 2
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
 
-class OpenScreen(arcade.Window):
+class OpenScreen():
 
     def __init__(self,root):
         self.root = root
@@ -75,7 +75,7 @@ class OpenScreen(arcade.Window):
 class LevelOne():
 
     def __init__(self):
-        super.__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
+        super().__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
         #sprite/background setup (pls finish this andrea)
         self.all_sprites_list = None
         self.car_list = None
@@ -91,23 +91,23 @@ class LevelOne():
         self.physics_engine = None
 
     def setup(self):
-        
+
         self.all_sprites_list = arcade.SpriteList()
         self.car_list = arcade.SpriteList()
-        
+
         #andrea
         #self.playerOne = arcade.Sprite(arguments)
-        #self.playerOne_center_x = 
-        #self.playerOne_center_y = 
+        #self.playerOne_center_x =
+        #self.playerOne_center_y =
 
         # self.playerTwo = arcade.Sprite(arguments)
-        # self.playerTwo_center_x = 
-        # self.playerTwo_center_y = 
-        
+        # self.playerTwo_center_x =
+        # self.playerTwo_center_y =
+
         #self.background = arcade.load_texture(file name)
-        
+
         #self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.playerTwo)
-        
+
 
 root = Tk()
 screen = OpenScreen(root)
