@@ -106,9 +106,8 @@ class LevelOne(arcade.Window):
         self.playerTwo_list.append(self.playerTwo)
 
         self.all_sprites_list.append(self.playerTwo)
-
         self.car_list.append(self.playerOne)
-        self.car_list.append(self.playerTwo)
+
 
         self.background = arcade.load_texture('CCSRuralbackground.png')
         self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
@@ -171,10 +170,12 @@ class LevelOne(arcade.Window):
 
 
         # Generate a list of all sprites that collided with the player.
-        hit_list = arcade.check_for_collision_with_list(self.playerOne,
+        self.hit_list = arcade.check_for_collision_with_list(self.playerOne,
                                                         self.all_sprites_list)
+        self.hit_list_2 = arcade.check_for_collision_with_list(self.playerTwo,
+                                                               self.car_list)
 
-        if self.playerOne in hit_list:
+        if self.playerOne in self.hit_list:
             self.playerOne.change_y = 0
             self.playerOne.change_x = 0
 
