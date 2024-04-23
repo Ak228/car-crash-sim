@@ -57,9 +57,6 @@ class OpenScreen():
 
     def start(self):
 
-        #hides root, maybe prevents conflict with arcade interfaces
-        self.root.withdraw()
-
         selected_level = int(self.LevelVar.get())
 
         if selected_level == 1:
