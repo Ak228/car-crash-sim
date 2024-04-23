@@ -60,14 +60,14 @@ class OpenScreen():
         #hides root, maybe prevents conflict with arcade interfaces
         self.root.withdraw()
 
-        if self.LevelVar.get() == '1':
-            start_game_one()
-        elif self.LevelVar.get() == '2':
-            start_game_two()
-        else:
-            start_game_three()
+        selected_level = int(self.LevelVar.get())
 
-
+        if selected_level == 1:
+            start_game(selected_level)
+        elif selected_level == 2:
+            start_game(selected_level)
+        elif selected_level == 3:
+            start_game(selected_level)
 
 class LevelOne(arcade.Window):
 
@@ -184,21 +184,20 @@ class LevelOne(arcade.Window):
             self.playerTwo.change_x = 0
 
 
-def start_game_one():
-    window = LevelOne()
-    window.setup()
-    arcade.run()
+def start_game(selected_level):
 
-def start_game_two():
-    window = LevelTwo()
-    window.setup()
-    arcade.run()
-
-def start_game_three():
-    window = LevelThree()
-    window.setup()
-    arcade.run()
-
+    if selected_level == 1:
+        window = LevelOne()
+        window.setup()
+        arcade.run()
+    elif selected_level == 2:
+        window = LevelTwo()
+        window.setup()
+        arcade.run()
+    else:
+        window = LevelThree()
+        window.setup()
+        arcade.run()
 
 root = Tk()
 screen = OpenScreen(root)
