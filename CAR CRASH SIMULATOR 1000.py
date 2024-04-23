@@ -4,6 +4,7 @@ import arcade
 from tkinter import *
 import random
 import math
+import time
 
 SPRITE_SCALING_CAR = 1
 SPRITE_SCALING_PED = 0.2
@@ -56,22 +57,57 @@ class OpenScreen(arcade.Window):
 
     def start(self):
 
+        #hides root, maybe prevents conflict with arcade interfaces
+        self.root.withdraw()
+
         if self.LevelVar.get() == '1':
             self.lvlone = LevelOne()
+            self.lvlone.run()
         elif self.LevelVar.get() == '2':
             self.lvltwo = LevelTwo()
+            self.lvltwo.run()
         else:
             self.lvlthree = LevelThree()
-
-
-#class LevelOne():
-
+            self.lvlthree.run()
 
 
 
+class LevelOne():
 
+    def __init__(self):
+        super.__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
+        #sprite/background setup (pls finish this andrea)
+        self.all_sprites_list = None
+        self.car_list = None
 
+        self.playerOne_list = None
+        self.playerTwo_list = None
 
+        self.set_mouse_visible(False)
+
+        self.background = None
+
+        #physics
+        self.physics_engine = None
+
+    def setup(self):
+        
+        self.all_sprites_list = arcade.SpriteList()
+        self.car_list = arcade.SpriteList()
+        
+        #andrea
+        #self.playerOne = arcade.Sprite(arguments)
+        #self.playerOne_center_x = 
+        #self.playerOne_center_y = 
+
+        # self.playerTwo = arcade.Sprite(arguments)
+        # self.playerTwo_center_x = 
+        # self.playerTwo_center_y = 
+        
+        #self.background = arcade.load_texture(file name)
+        
+        #self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.playerTwo)
+        
 
 root = Tk()
 screen = OpenScreen(root)
