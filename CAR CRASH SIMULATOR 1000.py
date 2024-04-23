@@ -22,20 +22,23 @@ class PhysicsDashboard():
         self.topFrame2 = Frame(self.topLevel)
         self.topFrame2.pack()
 
-        self.accelLabel_x = Label(self.topFrame2, text= "Enter x-acceleration (m/s):", font = self.font).pack()
-        self.accelEntry_x = Entry(self.topFrame2).pack()
+        self.accelLabel_one = Label(self.topFrame2, text= "Enter player one acceleration (m/s):", font = self.font).pack()
+        self.accelEntry_one = Entry(self.topFrame2).pack()
 
-        self.accelLabel_y = Label(self.topFrame2, text = "Enter y-acceleration (m/s):", font = self.font).pack()
-        self.accelEntry_y = Entry(self.topFrame2).pack()
+        self.accelLabel_two = Label(self.topFrame2, text = "Enter player two acceleration (m/s):", font = self.font).pack()
+        self.accelEntry_two = Entry(self.topFrame2).pack()
 
-        self.massLabel = Label(self.topFrame2, text = "Enter mass (kg):", font = self.font).pack()
-        self.massEntry_x = Entry(self.topFrame2).pack()
+        self.massLabel_one = Label(self.topFrame2, text = "Enter player one mass (kg):", font = self.font).pack()
+        self.massEntry_one = Entry(self.topFrame2).pack()
 
-        self.veloLabel_x = Label(self.topFrame2, text="Enter x-velocity (m/s):", font=self.font).pack()
-        self.veloEntry_x = Entry(self.topFrame2).pack()
+        self.massLabel_two = Label(self.topFrame2, text="Enter player two mass (kg):", font=self.font).pack()
+        self.massEntry_two = Entry(self.topFrame2).pack()
 
-        self.veloLabel_y = Label(self.topFrame2, text="Enter y-velocity (m/s):", font=self.font).pack()
-        self.veloEntry_y = Entry(self.topFrame2).pack()
+        self.veloLabel_one = Label(self.topFrame2, text="Enter player one velocity (m/s):", font=self.font).pack()
+        self.veloEntry_one = Entry(self.topFrame2).pack()
+
+        self.veloLabel_two = Label(self.topFrame2, text="Enter player two velocity (m/s):", font=self.font).pack()
+        self.veloEntry_two = Entry(self.topFrame2).pack()
 
         #needs command
         self.upload = Button(self.topFrame2, text = "Upload", font = self.font).pack()
