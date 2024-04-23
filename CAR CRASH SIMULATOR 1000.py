@@ -46,7 +46,7 @@ class OpenScreen():
 
     def getinfo(self):
 
-        self.newWindow = Toplevel(root)
+        self.newWindow = Toplevel(self.root)
 
         with open("CCS_Info.txt","r") as self.file:
             self.result = self.file.read()
@@ -61,27 +61,24 @@ class OpenScreen():
         self.root.withdraw()
 
         if self.LevelVar.get() == '1':
-            self.lvlone = LevelOne()
-            self.lvlone.run()
+            start_game_one()
         elif self.LevelVar.get() == '2':
-            self.lvltwo = LevelTwo()
-            self.lvltwo.run()
+            start_game_two()
         else:
-            self.lvlthree = LevelThree()
-            self.lvlthree.run()
+            start_game_three()
 
 
 
-class LevelOne():
+class LevelOne(arcade.Window):
 
     def __init__(self):
         super().__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
         #sprite/background setup (pls finish this andrea)
-        self.all_sprites_list = None
-        self.car_list = None
+        self.all_sprites_list = []
+        self.car_list = []
 
-        self.playerOne_list = None
-        self.playerTwo_list = None
+        self.playerOne_list = []
+        self.playerTwo_list = []
 
         self.set_mouse_visible(False)
 
@@ -94,19 +91,108 @@ class LevelOne():
 
         self.all_sprites_list = arcade.SpriteList()
         self.car_list = arcade.SpriteList()
+        self.playerOne_list = arcade.SpriteList()
+        self.playerTwo_list = arcade.SpriteList()
 
-        #andrea
-        #self.playerOne = arcade.Sprite(arguments)
-        #self.playerOne_center_x =
-        #self.playerOne_center_y =
 
-        # self.playerTwo = arcade.Sprite(arguments)
-        # self.playerTwo_center_x =
-        # self.playerTwo_center_y =
+        self.playerOne = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
+        self.playerOne_center_x = 50
+        self.playerOne_center_y = 50
+        self.playerOne_list.append(self.playerOne)
 
-        #self.background = arcade.load_texture(file name)
+        self.playerTwo = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
+        self.playerTwo_center_x = 500
+        self.playerTwo_center_y = 500
+        self.playerTwo_list.append(self.playerTwo)
 
-        #self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.playerTwo)
+        self.all_sprites_list.append(self.playerTwo)
+
+        self.car_list.append(self.playerOne)
+        self.car_list.append(self.playerTwo)
+
+        self.background = arcade.load_texture('CCSRuralbackground.png')
+        self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
+
+    def on_draw(self):
+
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                            SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            self.background)
+
+    def on_key_press(self, key, modifiers):
+
+        #need to change movement speed to stuff in terms of velocity/acceleration
+
+        if key == arcade.key.UP:
+            self.playerOne.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.playerOne.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.playerOne.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.playerOne.change_x = MOVEMENT_SPEED
+
+        if key == arcade.key.W:
+            self.playerTwo.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.S:
+            self.playerTwo.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.A:
+            self.playerTwo.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.D:
+            self.playerTwo.change_x = MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+
+        if key == arcade.key.UP:
+            self.playerOne.change_y = 0
+        elif key == arcade.key.DOWN:
+            self.playerOne.change_y = 0
+        elif key == arcade.key.LEFT:
+            self.playerOne.change_x = 0
+        elif key == arcade.key.RIGHT:
+            self.playerOne.change_x = 0
+
+        if key == arcade.key.W:
+            self.playerTwo.change_y = 0
+        elif key == arcade.key.S:
+            self.playerTwo.change_y = 0
+        elif key == arcade.key.A:
+            self.playerTwo.change_x = 0
+        elif key == arcade.key.D:
+            self.playerTwo.change_x = 0
+
+
+
+    def on_update(self, delta_time):
+
+        self.physics_engine.update()
+        self.all_sprites_list.update()
+
+
+        # Generate a list of all sprites that collided with the player.
+        hit_list = arcade.check_for_collision_with_list(self.playerOne,
+                                                        self.all_sprites_list)
+
+        if self.playerOne in hit_list:
+            self.playerOne.change_y = 0
+            self.playerOne.change_x = 0
+
+
+def start_game_one():
+    window = LevelOne()
+    window.setup()
+    arcade.run()
+
+def start_game_two():
+    window = LevelTwo()
+    window.setup()
+    arcade.run()
+
+def start_game_three():
+    window = LevelThree()
+    window.setup()
+    arcade.run()
 
 
 root = Tk()
