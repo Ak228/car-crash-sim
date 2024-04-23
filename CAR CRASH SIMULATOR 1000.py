@@ -5,6 +5,7 @@ from tkinter import *
 import random
 import math
 import time
+import threading
 
 SPRITE_SCALING_CAR = 1
 SPRITE_SCALING_PED = 0.2
