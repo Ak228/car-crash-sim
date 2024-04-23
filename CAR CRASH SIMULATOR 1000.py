@@ -12,6 +12,34 @@ MOVEMENT_SPEED = 2
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
 
+class PhysicsDashboard():
+
+    def __init__(self,parent):
+        self.topLevel = Toplevel(parent)
+        self.topLevel.title("Physics Dashboard")
+        self.font = ("Times New Roman",12)
+
+        self.topFrame2 = Frame(self.topLevel)
+        self.topFrame2.pack()
+
+        self.accelLabel_x = Label(self.topFrame2, text= "Enter x-acceleration (m/s):", font = self.font).pack()
+        self.accelEntry_x = Entry(self.topFrame2).pack()
+
+        self.accelLabel_y = Label(self.topFrame2, text = "Enter y-acceleration (m/s):", font = self.font).pack()
+        self.accelEntry_y = Entry(self.topFrame2).pack()
+
+        self.massLabel = Label(self.topFrame2, text = "Enter mass (kg):", font = self.font).pack()
+        self.massEntry_x = Entry(self.topFrame2).pack()
+
+        self.veloLabel_x = Label(self.topFrame2, text="Enter x-velocity (m/s):", font=self.font).pack()
+        self.veloEntry_x = Entry(self.topFrame2).pack()
+
+        self.veloLabel_y = Label(self.topFrame2, text="Enter y-velocity (m/s):", font=self.font).pack()
+        self.veloEntry_y = Entry(self.topFrame2).pack()
+
+        #needs command
+        self.upload = Button(self.topFrame2, text = "Upload", font = self.font).pack()
+
 class OpenScreen():
 
     def __init__(self,root):
@@ -21,9 +49,6 @@ class OpenScreen():
 
         self.topFrame = Frame(self.root)
         self.topFrame.pack()
-
-        #need welcome label
-        #need start button and level selection
 
         self.Welcomelabel = Label(self.topFrame, text = 'Welcome to Car Crash Simulator 1000!',
                             font = self.font)
@@ -183,6 +208,9 @@ class LevelOne(arcade.Window):
 
 def start_game(selected_level):
 
+    PhysicsDashboard(root)
+    root.update()
+
     if selected_level == 1:
         window = LevelOne()
         window.setup()
@@ -199,6 +227,8 @@ def start_game(selected_level):
 root = Tk()
 screen = OpenScreen(root)
 root.mainloop()
+
+
 
 
 
