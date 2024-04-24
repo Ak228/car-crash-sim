@@ -201,14 +201,17 @@ def start_game(selected_level):
     if selected_level == 1:
         window = LevelOne()
         window.setup()
+        root.destroy()
         arcade.run()
     elif selected_level == 2:
         window = LevelTwo()
         window.setup()
+        root.destroy()
         arcade.run()
     else:
         window = LevelThree()
         window.setup()
+        root.destroy()
         arcade.run()
 
 root = Tk()
