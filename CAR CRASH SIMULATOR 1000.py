@@ -6,10 +6,8 @@ from tkinter import *
 import random
 import math
 import time
-import threading
 
 SPRITE_SCALING_CAR = 1
-SPRITE_SCALING_PED = 0.2
 MOVEMENT_SPEED = 2
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
