@@ -1,6 +1,7 @@
 #Car Crash Simulator
 
 import arcade
+import arcade.gui
 from tkinter import *
 import random
 import math
@@ -12,37 +13,6 @@ SPRITE_SCALING_PED = 0.2
 MOVEMENT_SPEED = 2
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
-
-class PhysicsDashboard():
-
-    def __init__(self,parent):
-        self.topLevel = Toplevel(parent)
-        self.topLevel.title("Physics Dashboard")
-        self.font = ("Times New Roman",12)
-
-        self.topFrame2 = Frame(self.topLevel)
-        self.topFrame2.pack()
-
-        self.accelLabel_one = Label(self.topFrame2, text= "Enter player one acceleration (m/s):", font = self.font).pack()
-        self.accelEntry_one = Entry(self.topFrame2).pack()
-
-        self.accelLabel_two = Label(self.topFrame2, text = "Enter player two acceleration (m/s):", font = self.font).pack()
-        self.accelEntry_two = Entry(self.topFrame2).pack()
-
-        self.massLabel_one = Label(self.topFrame2, text = "Enter player one mass (kg):", font = self.font).pack()
-        self.massEntry_one = Entry(self.topFrame2).pack()
-
-        self.massLabel_two = Label(self.topFrame2, text="Enter player two mass (kg):", font=self.font).pack()
-        self.massEntry_two = Entry(self.topFrame2).pack()
-
-        self.veloLabel_one = Label(self.topFrame2, text="Enter player one velocity (m/s):", font=self.font).pack()
-        self.veloEntry_one = Entry(self.topFrame2).pack()
-
-        self.veloLabel_two = Label(self.topFrame2, text="Enter player two velocity (m/s):", font=self.font).pack()
-        self.veloEntry_two = Entry(self.topFrame2).pack()
-
-        #needs command
-        self.upload = Button(self.topFrame2, text = "Upload", font = self.font).pack()
 
 class OpenScreen():
 
@@ -95,32 +65,54 @@ class OpenScreen():
         elif selected_level == 3:
             start_game(selected_level)
 
+class PhysicsDashboard(arcade.Window):
+
+    def __init__(self):
+        super().__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Physics Dashboard")
+
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+
+        arcade.set_background_color(arcade.color.ARSENIC)
+
+    def on_draw(self):
+
+        arcade.start_render()
+
+
+
 class LevelOne(arcade.Window):
 
     def __init__(self):
-        super().__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
-        #sprite/background setup (pls finish this andrea)
-        self.all_sprites_list = []
-        self.car_list = []
-
-        self.playerOne_list = []
-        self.playerTwo_list = []
-
-        self.set_mouse_visible(False)
-
-        self.background = None
-
-        #physics
-        self.physics_engine = None
-
-    def setup(self):
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Level One")
 
         self.all_sprites_list = arcade.SpriteList()
         self.car_list = arcade.SpriteList()
         self.playerOne_list = arcade.SpriteList()
         self.playerTwo_list = arcade.SpriteList()
 
+        self.background = None
+        self.physics_engine = None
 
+        self.v_box = arcade.gui.UIBoxLayout()
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+
+        self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
+        # Bind the on_click method to the button's on_click event
+        self.switch.on_click = self.on_click
+
+        self.manager.add(
+                arcade.gui.UIAnchorWidget(
+                    align_x=350,
+                    align_y=-315,
+                    child=self.switch))
+
+    def on_click(self, event):
+        PhysicsDashboard()
+
+
+    def setup(self):
         self.playerOne = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
         self.playerOne.center_x = 50
         self.playerOne.center_y = 50
@@ -134,23 +126,17 @@ class LevelOne(arcade.Window):
         self.all_sprites_list.append(self.playerTwo)
         self.car_list.append(self.playerOne)
 
-
         self.background = arcade.load_texture('CCSRuralbackground.png')
         self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
 
     def on_draw(self):
-
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0,
-                                            SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         self.all_sprites_list.draw()
         self.car_list.draw()
+        self.manager.draw()
 
     def on_key_press(self, key, modifiers):
-
-        #need to change movement speed to stuff in terms of velocity/acceleration
-
         if key == arcade.key.UP:
             self.playerOne.change_y = MOVEMENT_SPEED
         elif key == arcade.key.DOWN:
@@ -170,7 +156,6 @@ class LevelOne(arcade.Window):
             self.playerTwo.change_x = MOVEMENT_SPEED
 
     def on_key_release(self, key, modifiers):
-
         if key == arcade.key.UP:
             self.playerOne.change_y = 0
         elif key == arcade.key.DOWN:
@@ -210,10 +195,8 @@ class LevelOne(arcade.Window):
             self.playerTwo.change_x = 0
 
 
-def start_game(selected_level):
 
-    PhysicsDashboard(root)
-    root.update()
+def start_game(selected_level):
 
     if selected_level == 1:
         window = LevelOne()
