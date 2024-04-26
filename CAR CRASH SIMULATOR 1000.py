@@ -131,8 +131,8 @@ class LevelOne(arcade.View):
         self.Home_button = arcade.gui.UIFlatButton(text='Home', width=125)
         self.manager.add(
             arcade.gui.UIAnchorWidget(
-                align_x= 200,
-                align_y=-315,
+                align_x= 350,
+                align_y=-260,
                 child=self.Home_button))
 
         @self.Home_button.event("on_click")
@@ -156,9 +156,10 @@ class LevelOne(arcade.View):
         self.background = arcade.load_texture('CCSRuralbackground.png')
         self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
 
+
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH-200, SCREEN_HEIGHT, self.background)
         self.all_sprites_list.draw()
         self.car_list.draw()
         self.manager.draw()
@@ -210,17 +211,8 @@ class LevelOne(arcade.View):
         self.physics_engine.update()
         self.all_sprites_list.update()
 
-
-        # Generate a list of all sprites that collided with the player.
-        self.hit_list = arcade.check_for_collision_with_list(self.playerOne,
-                                                        self.all_sprites_list)
-
-        self.hit_list_2 = arcade.check_for_collision_with_list(self.playerTwo,
-                                                               self.car_list)
-
-        if self.playerTwo in self.hit_list_2:
-            self.playerTwo.change_y = 0
-            self.playerTwo.change_x = 0
+        if arcade.check_for_collision(self.playerOne, self.playerTwo):
+            self.collision()
 
         if self.playerOne.center_y < 0:
             self.playerOne.center_y = 0
@@ -240,6 +232,11 @@ class LevelOne(arcade.View):
         if self.playerTwo.center_x > 900:
             self.playerTwo.center_x = 900
 
+    def collision(self):
+        self.playerOne.change_x = 0
+        self.playerOne.change_y = 0
+        self.playerTwo.change_x = 0
+        self.playerTwo.change_y = 0
 
 class PhysicsDashboard(arcade.View):
 
