@@ -155,6 +155,7 @@ class LevelOne(arcade.View):
 
         self.background = arcade.load_texture('CCSRuralbackground.png')
         self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
+        self.physics_engine2 = arcade.PhysicsEngineSimple(self.playerTwo, self.car_list)
 
 
     def on_draw(self):
@@ -208,10 +209,13 @@ class LevelOne(arcade.View):
     def on_update(self, delta_time):
 
         self.physics_engine.update()
-        self.all_sprites_list.update()
+        self.physics_engine2.update()
 
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
-            self.collision()
+            self.playerOne.change_x = 0
+            self.playerOne.change_y = 0
+            self.playerTwo.change_x = 0
+            self.playerTwo.change_y = 0
 
         if self.playerOne.center_y < 0:
             self.playerOne.center_y = 0
@@ -230,12 +234,6 @@ class LevelOne(arcade.View):
             self.playerTwo.center_x = 0
         if self.playerTwo.center_x > 666:
             self.playerTwo.center_x = 666
-
-    def collision(self):
-        self.playerOne.change_x = 0
-        self.playerOne.change_y = 0
-        self.playerTwo.change_x = 0
-        self.playerTwo.change_y = 0
 
 class PhysicsDashboard(arcade.View):
 
