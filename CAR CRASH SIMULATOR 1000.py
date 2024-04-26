@@ -167,7 +167,6 @@ class LevelOne(arcade.View):
         #need some type of interface in corners that show momentum, change in momentum,
         #heading (in case someone wants to calculate components),
 
-
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
             self.playerOne.change_y = MOVEMENT_SPEED
@@ -220,8 +219,8 @@ class LevelOne(arcade.View):
             self.playerOne.center_y = 700
         if self.playerOne.center_x < 0:
             self.playerOne.center_x = 0
-        if self.playerOne.center_x > 900:
-            self.playerOne.center_x = 900
+        if self.playerOne.center_x > 666:
+            self.playerOne.center_x = 666
 
         if self.playerTwo.center_y < 0:
             self.playerTwo.center_y = 0
@@ -229,8 +228,8 @@ class LevelOne(arcade.View):
             self.playerTwo.center_y = 700
         if self.playerTwo.center_x < 0:
             self.playerTwo.center_x = 0
-        if self.playerTwo.center_x > 900:
-            self.playerTwo.center_x = 900
+        if self.playerTwo.center_x > 666:
+            self.playerTwo.center_x = 666
 
     def collision(self):
         self.playerOne.change_x = 0
