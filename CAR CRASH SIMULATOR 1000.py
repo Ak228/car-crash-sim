@@ -2,7 +2,6 @@
 
 import arcade
 import arcade.gui
-from tkinter import *
 import math
 
 
@@ -11,60 +10,106 @@ MOVEMENT_SPEED = 5
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
 
-class OpenScreen():
+class OpenScreen(arcade.View):
 
-    def __init__(self,root):
-        self.root = root
-        root.title("Car Crash Simulator 1000")
-        self.font = ("Times New Roman",20)
+    def __init__(self):
+        super().__init__()
 
-        self.topFrame = Frame(self.root)
-        self.topFrame.pack()
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
 
-        self.Welcomelabel = Label(self.topFrame, text = 'Welcome to Car Crash Simulator 1000!',
-                            font = self.font)
-        self.Welcomelabel.pack()
+        self.Welcome_label = arcade.gui.UILabel(
+            text = "Welcome to Car Crash Simulator 1000!",
+            font_name= "Times New Roman",
+            font_size = 26,
+            bold = True)
 
-        self.LevelLabel = Label(self.topFrame, text = 'Level',font =('Times 18 underline'))
-        self.LevelList = [1,2,3]
-        self.LevelVar = StringVar(self.topFrame)
-        self.LevelVar.set(1)
-        self.Level = OptionMenu(self.topFrame, self.LevelVar, *self.LevelList,)
+        self.Welcome_anchor = self.manager.add(
+            arcade.gui.UIAnchorWidget(
+            anchor_x= 'center',
+            anchor_y= 'top',
+            child = self.Welcome_label))
 
-        self.LevelLabel.pack()
-        self.Level.pack()
+        self.LvlOne_button = arcade.gui.UIFlatButton(text = 'Level One', width = 125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x= 'center',
+                align_y= 100,
+                child=self.LvlOne_button))
 
-        self.StartButton = Button(self.topFrame, text = 'Start', command=self.start)
-        self.StartButton.pack()
+        @self.LvlOne_button.event("on_click")
+        def on_click(event):
+            self.levelone = LevelOne(self)
+            self.window.show_view(self.levelone)
 
-        self.InstructionsButton = Button(self.topFrame, text = 'Instructions',command = self.getinfo)
-        self.InstructionsButton.pack()
+        self.LvlTwo_button = arcade.gui.UIFlatButton(text='Level Two', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x='center',
+                align_y=40,
+                child=self.LvlTwo_button))
 
-    def getinfo(self):
+        @self.LvlTwo_button.event("on_click")
+        def on_click(event):
+            self.leveltwo = LevelTwo(self)
+            self.window.show_view(self.leveltwo)
 
-        self.newWindow = Toplevel(self.root)
+        self.LvlThree_button = arcade.gui.UIFlatButton(text='Level Three', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x='center',
+                align_y=-20,
+                child=self.LvlThree_button))
+
+        @self.LvlThree_button.event("on_click")
+        def on_click(event):
+            self.levelthree = LevelTwo(self)
+            self.window.show_view(self.levelthree)
 
         with open("CCS_Info.txt","r") as self.file:
             self.result = self.file.read()
 
-        self.text = Text(self.newWindow, font = self.font)
-        self.text.pack()
-        self.text.insert(END,self.result)
+        self.Welcome_anchor = self.manager.add(
+            arcade.gui.UITextArea(
+                x=0,
+                y=0,
+                height = 300,
+                width = 900,
+                text= self.result,
+                font_name = "Times New Roman",
+                font_size = 13,
+                bold = True,
+                multiline = True))
 
-    def start(self):
 
-        selected_level = int(self.LevelVar.get())
 
-        if selected_level == 1:
-            start_game(selected_level)
-        elif selected_level == 2:
-            start_game(selected_level)
-        elif selected_level == 3:
-            start_game(selected_level)
+    def on_hide_view(self):
+        self.manager.disable()
+
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.ARSENIC)
+        self.manager.enable()
+
+    def on_draw(self):
+        arcade.start_render()
+        self.clear()
+        self.manager.draw()
+
+        self.Tessy = arcade.load_texture("CCSTessy1.png")
+        self.Benz = arcade.load_texture("CCSBenz1.png")
+        self.Lambo = arcade.load_texture("CCSlambo1.png")
+
+        arcade.draw_scaled_texture_rectangle(175, 550, self.Tessy, SPRITE_SCALING_CAR*2, 0)
+        arcade.draw_scaled_texture_rectangle(450, 550, self.Benz, SPRITE_SCALING_CAR*2, 0)
+        arcade.draw_scaled_texture_rectangle(700, 550, self.Lambo, SPRITE_SCALING_CAR*2, 0)
+
+
+
+
 
 class LevelOne(arcade.View):
 
-    def __init__(self):
+    def __init__(self,main_view):
         super().__init__()
 
         self.all_sprites_list = arcade.SpriteList()
@@ -86,6 +131,18 @@ class LevelOne(arcade.View):
                     align_x=350,
                     align_y=-315,
                     child=self.switch))
+
+        self.Home_button = arcade.gui.UIFlatButton(text='Home', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x= 200,
+                align_y=-315,
+                child=self.Home_button))
+
+        @self.Home_button.event("on_click")
+        def on_click(event):
+            self.home = OpenScreen()
+            self.window.show_view(self.home)
 
         self.playerOne = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
         self.playerOne.center_x = 50
@@ -109,9 +166,9 @@ class LevelOne(arcade.View):
         self.all_sprites_list.draw()
         self.car_list.draw()
         self.manager.draw()
-        
+
         #need some type of interface in corners that show momentum, change in momentum,
-        #heading (in case someone wants to calculate components), 
+        #heading (in case someone wants to calculate components),
 
 
     def on_key_press(self, key, modifiers):
@@ -164,7 +221,7 @@ class LevelOne(arcade.View):
 
         self.hit_list_2 = arcade.check_for_collision_with_list(self.playerTwo,
                                                                self.car_list)
-        
+
         if self.playerTwo in self.hit_list_2:
             self.playerTwo.change_y = 0
             self.playerTwo.change_x = 0
@@ -190,7 +247,7 @@ class LevelOne(arcade.View):
 
 class PhysicsDashboard(arcade.View):
 
-    def __init__(self, main_view):
+    def __init__(self, game_view):
         super().__init__()
 
         self.manager = arcade.gui.UIManager()
@@ -200,7 +257,7 @@ class PhysicsDashboard(arcade.View):
 
         @self.exit.event("on_click")
         def on_click(event):
-            self.levelone = LevelOne()
+            self.levelone = LevelOne(self)
             self.window.show_view(self.levelone)
 
         self.manager.add(
@@ -232,27 +289,15 @@ class PhysicsDashboard(arcade.View):
         self.clear()
         self.manager.draw()
 
-def start_game(selected_level):
+def main():
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Car Crash Simulator 1000")
+    main_view = OpenScreen()
+    window.show_view(main_view)
+    arcade.run()
 
-    if selected_level == 1:
-        window = arcade.Window(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
-        main_view = LevelOne()
-        window.show_view(main_view)
-        arcade.run()
-    elif selected_level == 2:
-        window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Two")
-        main_view = LevelTwo()
-        window.show_view(main_view)
-        arcade.run()
-    else:
-        window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Three")
-        main_view = LevelThree()
-        window.show_view(main_view)
-        arcade.run()
+if __name__ == "__main__":
+    main()
 
-root = Tk()
-screen = OpenScreen(root)
-root.mainloop()
 
 
 
