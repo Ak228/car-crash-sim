@@ -94,7 +94,7 @@ class OpenScreen(arcade.View):
         self.clear()
         self.manager.draw()
 
-        self.collision = arcade.load_texture("collision_nobg.png")
+        self.collision = arcade.load_texture("CCScollision_nobg.png")
 
         arcade.draw_scaled_texture_rectangle(435, 550, self.collision, SPRITE_SCALING_CAR*0.5, 0)
 
@@ -283,9 +283,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
