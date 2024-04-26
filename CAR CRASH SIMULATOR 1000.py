@@ -7,7 +7,7 @@ import math
 
 
 SPRITE_SCALING_CAR = 1
-MOVEMENT_SPEED = 2
+MOVEMENT_SPEED = 5
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
 
@@ -109,6 +109,9 @@ class LevelOne(arcade.View):
         self.all_sprites_list.draw()
         self.car_list.draw()
         self.manager.draw()
+        
+        #need some type of interface in corners that show momentum, change in momentum,
+        #heading (in case someone wants to calculate components), 
 
 
     def on_key_press(self, key, modifiers):
@@ -161,10 +164,7 @@ class LevelOne(arcade.View):
 
         self.hit_list_2 = arcade.check_for_collision_with_list(self.playerTwo,
                                                                self.car_list)
-
-        if self.playerOne in self.hit_list:
-            self.playerOne.change_y = 0
-            self.playerOne.change_x = 0
+        
         if self.playerTwo in self.hit_list_2:
             self.playerTwo.change_y = 0
             self.playerTwo.change_x = 0
@@ -196,6 +196,31 @@ class PhysicsDashboard(arcade.View):
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
 
+        self.exit = arcade.gui.UIFlatButton(text="Exit", width=100)
+
+        @self.exit.event("on_click")
+        def on_click(event):
+            self.levelone = LevelOne()
+            self.window.show_view(self.levelone)
+
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x=350,
+                align_y=-315,
+                child=self.exit))
+
+        self.upload = arcade.gui.UIFlatButton(text="Upload", width=100)
+
+        #@self.upload.event("on_click")
+        #def on_click(event):
+            #needs to return, mass, acceleration (px/s^2), velocity(px/s)
+
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x=225,
+                align_y=-315,
+                child=self.upload))
+
     def on_hide_view(self):
         self.manager.disable()
 
@@ -213,19 +238,16 @@ def start_game(selected_level):
         window = arcade.Window(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
         main_view = LevelOne()
         window.show_view(main_view)
-        root.destroy()
         arcade.run()
     elif selected_level == 2:
         window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Two")
         main_view = LevelTwo()
         window.show_view(main_view)
-        root.destroy()
         arcade.run()
     else:
         window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Three")
         main_view = LevelThree()
         window.show_view(main_view)
-        root.destroy()
         arcade.run()
 
 root = Tk()
