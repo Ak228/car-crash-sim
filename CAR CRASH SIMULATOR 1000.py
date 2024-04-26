@@ -3,9 +3,8 @@
 import arcade
 import arcade.gui
 from tkinter import *
-import random
 import math
-import time
+
 
 SPRITE_SCALING_CAR = 1
 MOVEMENT_SPEED = 2
@@ -63,42 +62,24 @@ class OpenScreen():
         elif selected_level == 3:
             start_game(selected_level)
 
-class PhysicsDashboard(arcade.Window):
+class LevelOne(arcade.View):
 
     def __init__(self):
-        super().__init__(SCREEN_WIDTH,SCREEN_HEIGHT,"Physics Dashboard")
-
-        self.manager = arcade.gui.UIManager()
-        self.manager.enable()
-
-        arcade.set_background_color(arcade.color.ARSENIC)
-
-    def on_draw(self):
-
-        arcade.start_render()
-
-
-
-class LevelOne(arcade.Window):
-
-    def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Level One")
+        super().__init__()
 
         self.all_sprites_list = arcade.SpriteList()
         self.car_list = arcade.SpriteList()
         self.playerOne_list = arcade.SpriteList()
         self.playerTwo_list = arcade.SpriteList()
 
-        self.background = None
-        self.physics_engine = None
-
-        self.v_box = arcade.gui.UIBoxLayout()
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-
         self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
-        # Bind the on_click method to the button's on_click event
-        self.switch.on_click = self.on_click
+
+        @self.switch.event("on_click")
+        def on_click(event):
+            dash = PhysicsDashboard(self)
+            self.window.show_view(dash)
 
         self.manager.add(
                 arcade.gui.UIAnchorWidget(
@@ -106,17 +87,12 @@ class LevelOne(arcade.Window):
                     align_y=-315,
                     child=self.switch))
 
-    def on_click(self, event):
-        PhysicsDashboard()
-
-
-    def setup(self):
-        self.playerOne = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
+        self.playerOne = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
         self.playerOne.center_x = 50
         self.playerOne.center_y = 50
         self.playerOne_list.append(self.playerOne)
 
-        self.playerTwo = arcade.Sprite('CCSTessy.png', SPRITE_SCALING_CAR)
+        self.playerTwo = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
         self.playerTwo.center_x = 600
         self.playerTwo.center_y = 600
         self.playerTwo_list.append(self.playerTwo)
@@ -133,6 +109,7 @@ class LevelOne(arcade.Window):
         self.all_sprites_list.draw()
         self.car_list.draw()
         self.manager.draw()
+
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
@@ -192,23 +169,62 @@ class LevelOne(arcade.Window):
             self.playerTwo.change_y = 0
             self.playerTwo.change_x = 0
 
+        if self.playerOne.center_y < 0:
+            self.playerOne.center_y = 0
+        if self.playerOne.center_y > 700:
+            self.playerOne.center_y = 700
+        if self.playerOne.center_x < 0:
+            self.playerOne.center_x = 0
+        if self.playerOne.center_x > 900:
+            self.playerOne.center_x = 900
 
+        if self.playerTwo.center_y < 0:
+            self.playerTwo.center_y = 0
+        if self.playerTwo.center_y > 700:
+            self.playerTwo.center_y = 700
+        if self.playerTwo.center_x < 0:
+            self.playerTwo.center_x = 0
+        if self.playerTwo.center_x > 900:
+            self.playerTwo.center_x = 900
+
+
+class PhysicsDashboard(arcade.View):
+
+    def __init__(self, main_view):
+        super().__init__()
+
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+
+    def on_hide_view(self):
+        self.manager.disable()
+
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.ARSENIC)
+        self.manager.enable()
+
+    def on_draw(self):
+        self.clear()
+        self.manager.draw()
 
 def start_game(selected_level):
 
     if selected_level == 1:
-        window = LevelOne()
-        window.setup()
+        window = arcade.Window(SCREEN_WIDTH,SCREEN_HEIGHT,"Level One")
+        main_view = LevelOne()
+        window.show_view(main_view)
         root.destroy()
         arcade.run()
     elif selected_level == 2:
-        window = LevelTwo()
-        window.setup()
+        window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Two")
+        main_view = LevelTwo()
+        window.show_view(main_view)
         root.destroy()
         arcade.run()
     else:
-        window = LevelThree()
-        window.setup()
+        window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Three")
+        main_view = LevelThree()
+        window.show_view(main_view)
         root.destroy()
         arcade.run()
 
