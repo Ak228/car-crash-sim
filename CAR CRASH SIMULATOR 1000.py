@@ -113,6 +113,8 @@ class LevelOne(arcade.View):
         self.manager.enable()
         self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
 
+        self.movement = True
+
         @self.switch.event("on_click")
         def on_click(event):
             dash = PhysicsDashboard(self)
@@ -135,6 +137,22 @@ class LevelOne(arcade.View):
         def on_click(event):
             self.home = OpenScreen()
             self.window.show_view(self.home)
+
+        self.Reset_button = arcade.gui.UIFlatButton(text='Reset Position', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x=350,
+                align_y=-205,
+                child=self.Reset_button))
+
+        @self.Reset_button.event("on_click")
+        def on_click(event):
+            self.playerOne.center_x = 50
+            self.playerOne.center_y = 50
+            self.playerTwo.center_x = 600
+            self.playerTwo.center_y = 600
+
+            self.movement = True
 
         self.playerOne = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
         self.playerOne.center_x = 50
@@ -165,6 +183,9 @@ class LevelOne(arcade.View):
         #heading (in case someone wants to calculate components),
 
     def on_key_press(self, key, modifiers):
+        if not self.movement:
+            return
+
         if key == arcade.key.UP:
             self.playerOne.change_y = MOVEMENT_SPEED
         elif key == arcade.key.DOWN:
@@ -184,22 +205,18 @@ class LevelOne(arcade.View):
             self.playerTwo.change_x = MOVEMENT_SPEED
 
     def on_key_release(self, key, modifiers):
-        if key == arcade.key.UP:
+
+        if not self.movement:
+            return
+
+        if key in [arcade.key.UP, arcade.key.DOWN]:
             self.playerOne.change_y = 0
-        elif key == arcade.key.DOWN:
-            self.playerOne.change_y = 0
-        elif key == arcade.key.LEFT:
-            self.playerOne.change_x = 0
-        elif key == arcade.key.RIGHT:
+        if key in [arcade.key.LEFT, arcade.key.RIGHT]:
             self.playerOne.change_x = 0
 
-        if key == arcade.key.W:
+        if key in [arcade.key.W, arcade.key.S]:
             self.playerTwo.change_y = 0
-        elif key == arcade.key.S:
-            self.playerTwo.change_y = 0
-        elif key == arcade.key.A:
-            self.playerTwo.change_x = 0
-        elif key == arcade.key.D:
+        if key in [arcade.key.A, arcade.key.D]:
             self.playerTwo.change_x = 0
 
     def on_update(self, delta_time):
@@ -207,11 +224,12 @@ class LevelOne(arcade.View):
         self.physics_engine.update()
         self.physics_engine2.update()
 
+        self.all_sprites_list.update()
+        self.car_list.update()
+
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
-            self.playerOne.change_x = 0
-            self.playerOne.change_y = 0
-            self.playerTwo.change_x = 0
-            self.playerTwo.change_y = 0
+            self.collisions()
+
 
         if self.playerOne.center_y < 0:
             self.playerOne.center_y = 0
@@ -230,6 +248,15 @@ class LevelOne(arcade.View):
             self.playerTwo.center_x = 0
         if self.playerTwo.center_x > 666:
             self.playerTwo.center_x = 666
+
+    def collisions(self):
+        self.movement = False
+
+        self.playerOne.change_x = 0
+        self.playerOne.change_y = 0
+        self.playerTwo.change_x = 0
+        self.playerTwo.change_y = 0
+
 
 class PhysicsDashboard(arcade.View):
 
@@ -283,3 +310,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
