@@ -82,7 +82,6 @@ class OpenScreen(arcade.View):
                 multiline = True))
 
 
-
     def on_hide_view(self):
         self.manager.disable()
 
@@ -102,9 +101,6 @@ class OpenScreen(arcade.View):
         arcade.draw_scaled_texture_rectangle(175, 550, self.Tessy, SPRITE_SCALING_CAR*2, 0)
         arcade.draw_scaled_texture_rectangle(450, 550, self.Benz, SPRITE_SCALING_CAR*2, 0)
         arcade.draw_scaled_texture_rectangle(700, 550, self.Lambo, SPRITE_SCALING_CAR*2, 0)
-
-
-
 
 
 class LevelOne(arcade.View):
@@ -266,7 +262,7 @@ class PhysicsDashboard(arcade.View):
                 align_y=-315,
                 child=self.exit))
 
-        self.upload = arcade.gui.UIFlatButton(text="Upload", width=100)
+        self.upload = arcade.gui.UIFlatButton(text="Upload Settings", width=100)
 
         #@self.upload.event("on_click")
         #def on_click(event):
