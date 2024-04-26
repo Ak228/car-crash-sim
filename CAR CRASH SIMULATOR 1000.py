@@ -94,13 +94,9 @@ class OpenScreen(arcade.View):
         self.clear()
         self.manager.draw()
 
-        self.Tessy = arcade.load_texture("CCSTessy1.png")
-        self.Benz = arcade.load_texture("CCSBenz1.png")
-        self.Lambo = arcade.load_texture("CCSlambo1.png")
+        self.collision = arcade.load_texture("collision_nobg.png")
 
-        arcade.draw_scaled_texture_rectangle(175, 550, self.Tessy, SPRITE_SCALING_CAR*2, 0)
-        arcade.draw_scaled_texture_rectangle(450, 550, self.Benz, SPRITE_SCALING_CAR*2, 0)
-        arcade.draw_scaled_texture_rectangle(700, 550, self.Lambo, SPRITE_SCALING_CAR*2, 0)
+        arcade.draw_scaled_texture_rectangle(435, 550, self.collision, SPRITE_SCALING_CAR*0.5, 0)
 
 
 class LevelOne(arcade.View):
