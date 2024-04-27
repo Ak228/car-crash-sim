@@ -115,6 +115,7 @@ class LevelOne(arcade.View):
 
         self.movement = True
 
+
         @self.switch.event("on_click")
         def on_click(event):
             dash = PhysicsDashboard(self)
@@ -151,10 +152,9 @@ class LevelOne(arcade.View):
             self.playerOne.center_y = 50
             self.playerTwo.center_x = 600
             self.playerTwo.center_y = 600
-
             self.movement = True
 
-        self.playerOne = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
+        self.playerOne = arcade.Sprite('CCSTessy1_Flipped.png', SPRITE_SCALING_CAR)
         self.playerOne.center_x = 50
         self.playerOne.center_y = 50
         self.playerOne_list.append(self.playerOne)
@@ -251,12 +251,26 @@ class LevelOne(arcade.View):
 
     def collisions(self):
         self.movement = False
-
         self.playerOne.change_x = 0
         self.playerOne.change_y = 0
         self.playerTwo.change_x = 0
         self.playerTwo.change_y = 0
 
+        self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
+        self.crash_player = arcade.play_sound(self.crash_sound)
+
+        self.crash_message = arcade.gui.UIMessageBox(
+            message_text='Crash! Cars have been disabled. Please reset.',
+            width=200,
+            height=200,
+            buttons = ["Ok"])
+
+        self.manager.add(self.crash_message)
+
+        self.crash_message.on_close = self.callback
+
+    def callback(self):
+        self.manager.remove(self.crash_message)
 
 class PhysicsDashboard(arcade.View):
 
