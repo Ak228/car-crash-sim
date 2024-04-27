@@ -6,7 +6,7 @@ import math
 
 
 SPRITE_SCALING_CAR = 1
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 4
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
 
@@ -63,7 +63,7 @@ class OpenScreen(arcade.View):
 
         @self.LvlThree_button.event("on_click")
         def on_click(event):
-            self.levelthree = LevelTwo(self)
+            self.levelthree = LevelThree(self)
             self.window.show_view(self.levelthree)
 
         with open("CCS_Info.txt","r") as self.file:
@@ -150,8 +150,11 @@ class LevelOne(arcade.View):
         def on_click(event):
             self.playerOne.center_x = 50
             self.playerOne.center_y = 50
+
             self.playerTwo.center_x = 600
             self.playerTwo.center_y = 600
+
+
             self.movement = True
 
         self.playerOne = arcade.Sprite('CCSTessy1_Flipped.png', SPRITE_SCALING_CAR)
@@ -177,7 +180,38 @@ class LevelOne(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH-200, SCREEN_HEIGHT, self.background)
         self.all_sprites_list.draw()
         self.car_list.draw()
+
+        # Player One#
+
+        arcade.draw_text('Player One', 750, 666, arcade.color.WHITE, 14, bold = True)
+
+        self.position = f"Position: {self.playerOne.center_x},{self.playerOne.center_y}"
+        arcade.draw_text(self.position, 715, 640, arcade.color.WHITE, 10)
+
+        self.playerOne.angle = math.atan2(self.playerOne.change_y, self.playerOne.change_x)
+        self.playerOne_angle_deg = math.degrees(self.playerOne.angle)
+
+        self.angle = f"Angle: {self.playerOne_angle_deg}"
+        arcade.draw_text(self.angle, 715, 614, arcade.color.WHITE, 10)
+
+        #Player Two#
+
+        arcade.draw_text('Player Two', 750, 400, arcade.color.WHITE, 14, bold=True)
+
+        self.position2 = f"Position: {self.playerTwo.center_x},{self.playerTwo.center_y}"
+        arcade.draw_text(self.position2, 715, 380, arcade.color.WHITE, 10)
+
+        self.playerTwo.angle = math.atan2(self.playerTwo.change_y, self.playerTwo.change_x)
+        self.playerTwo_angle_deg = math.degrees(self.playerTwo.angle)
+
+        self.angle2 = f"Angle: {self.playerTwo_angle_deg}"
+        arcade.draw_text(self.angle, 715, 367, arcade.color.WHITE, 10)
+
+
+
+
         self.manager.draw()
+
 
         #need some type of interface in corners that show momentum, change in momentum,
         #heading (in case someone wants to calculate components),
@@ -315,6 +349,352 @@ class PhysicsDashboard(arcade.View):
     def on_draw(self):
         self.clear()
         self.manager.draw()
+
+class LevelTwo(arcade.View):
+
+    def __init__(self,main_view):
+        super().__init__()
+
+        self.all_sprites_list = arcade.SpriteList()
+        self.car_list = arcade.SpriteList()
+        self.playerOne_list = arcade.SpriteList()
+        self.playerTwo_list = arcade.SpriteList()
+
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
+
+        self.movement = True
+
+
+        @self.switch.event("on_click")
+        def on_click(event):
+            dash = PhysicsDashboard(self)
+            self.window.show_view(dash)
+
+        self.manager.add(
+                arcade.gui.UIAnchorWidget(
+                    align_x=350,
+                    align_y=-315,
+                    child=self.switch))
+
+        self.Home_button = arcade.gui.UIFlatButton(text='Home', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x= 350,
+                align_y=-260,
+                child=self.Home_button))
+
+        @self.Home_button.event("on_click")
+        def on_click(event):
+            self.home = OpenScreen()
+            self.window.show_view(self.home)
+
+        self.Reset_button = arcade.gui.UIFlatButton(text='Reset Position', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x=350,
+                align_y=-205,
+                child=self.Reset_button))
+
+        @self.Reset_button.event("on_click")
+        def on_click(event):
+            self.playerOne.center_x = 50
+            self.playerOne.center_y = 50
+            self.playerTwo.center_x = 600
+            self.playerTwo.center_y = 600
+            self.movement = True
+
+        self.playerOne = arcade.Sprite('CCSBenz1_Flipped.png', SPRITE_SCALING_CAR*1.25)
+        self.playerOne.center_x = 50
+        self.playerOne.center_y = 50
+        self.playerOne_list.append(self.playerOne)
+
+        self.playerTwo = arcade.Sprite('CCSBenz1.png', SPRITE_SCALING_CAR*1.25)
+        self.playerTwo.center_x = 600
+        self.playerTwo.center_y = 600
+        self.playerTwo_list.append(self.playerTwo)
+
+        self.all_sprites_list.append(self.playerTwo)
+        self.car_list.append(self.playerOne)
+
+        self.background = arcade.load_texture('CCSCitybackground.png')
+        self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
+        self.physics_engine2 = arcade.PhysicsEngineSimple(self.playerTwo, self.car_list)
+
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH-200, SCREEN_HEIGHT, self.background)
+        self.all_sprites_list.draw()
+        self.car_list.draw()
+        self.manager.draw()
+
+        #need some type of interface in corners that show momentum, change in momentum,
+        #heading (in case someone wants to calculate components),
+
+    def on_key_press(self, key, modifiers):
+        if not self.movement:
+            return
+
+        if key == arcade.key.UP:
+            self.playerOne.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.playerOne.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.playerOne.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.playerOne.change_x = MOVEMENT_SPEED
+
+        if key == arcade.key.W:
+            self.playerTwo.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.S:
+            self.playerTwo.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.A:
+            self.playerTwo.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.D:
+            self.playerTwo.change_x = MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+
+        if not self.movement:
+            return
+
+        if key in [arcade.key.UP, arcade.key.DOWN]:
+            self.playerOne.change_y = 0
+        if key in [arcade.key.LEFT, arcade.key.RIGHT]:
+            self.playerOne.change_x = 0
+
+        if key in [arcade.key.W, arcade.key.S]:
+            self.playerTwo.change_y = 0
+        if key in [arcade.key.A, arcade.key.D]:
+            self.playerTwo.change_x = 0
+
+    def on_update(self, delta_time):
+
+        self.physics_engine.update()
+        self.physics_engine2.update()
+
+        self.all_sprites_list.update()
+        self.car_list.update()
+
+        if arcade.check_for_collision(self.playerOne, self.playerTwo):
+            self.collisions()
+
+
+        if self.playerOne.center_y < 0:
+            self.playerOne.center_y = 0
+        if self.playerOne.center_y > 700:
+            self.playerOne.center_y = 700
+        if self.playerOne.center_x < 0:
+            self.playerOne.center_x = 0
+        if self.playerOne.center_x > 666:
+            self.playerOne.center_x = 666
+
+        if self.playerTwo.center_y < 0:
+            self.playerTwo.center_y = 0
+        if self.playerTwo.center_y > 700:
+            self.playerTwo.center_y = 700
+        if self.playerTwo.center_x < 0:
+            self.playerTwo.center_x = 0
+        if self.playerTwo.center_x > 666:
+            self.playerTwo.center_x = 666
+
+    def collisions(self):
+        self.movement = False
+        self.playerOne.change_x = 0
+        self.playerOne.change_y = 0
+        self.playerTwo.change_x = 0
+        self.playerTwo.change_y = 0
+
+        self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
+        self.crash_player = arcade.play_sound(self.crash_sound)
+
+        self.crash_message = arcade.gui.UIMessageBox(
+            message_text='Crash! Cars have been disabled. Please reset.',
+            width=200,
+            height=200,
+            buttons = ["Ok"])
+
+        self.manager.add(self.crash_message)
+
+        self.crash_message.on_close = self.callback
+
+    def callback(self):
+        self.manager.remove(self.crash_message)
+
+class LevelThree(arcade.View):
+
+    def __init__(self,main_view):
+        super().__init__()
+
+        self.all_sprites_list = arcade.SpriteList()
+        self.car_list = arcade.SpriteList()
+        self.playerOne_list = arcade.SpriteList()
+        self.playerTwo_list = arcade.SpriteList()
+
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
+
+        self.movement = True
+
+
+        @self.switch.event("on_click")
+        def on_click(event):
+            dash = PhysicsDashboard(self)
+            self.window.show_view(dash)
+
+        self.manager.add(
+                arcade.gui.UIAnchorWidget(
+                    align_x=350,
+                    align_y=-315,
+                    child=self.switch))
+
+        self.Home_button = arcade.gui.UIFlatButton(text='Home', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x= 350,
+                align_y=-260,
+                child=self.Home_button))
+
+        @self.Home_button.event("on_click")
+        def on_click(event):
+            self.home = OpenScreen()
+            self.window.show_view(self.home)
+
+        self.Reset_button = arcade.gui.UIFlatButton(text='Reset Position', width=125)
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                align_x=350,
+                align_y=-205,
+                child=self.Reset_button))
+
+        @self.Reset_button.event("on_click")
+        def on_click(event):
+            self.playerOne.center_x = 50
+            self.playerOne.center_y = 50
+            self.playerTwo.center_x = 600
+            self.playerTwo.center_y = 600
+            self.movement = True
+
+        self.playerOne = arcade.Sprite('CCSlambo1_Flipped.png', SPRITE_SCALING_CAR*1.25)
+        self.playerOne.center_x = 50
+        self.playerOne.center_y = 50
+        self.playerOne_list.append(self.playerOne)
+
+        self.playerTwo = arcade.Sprite('CCSlambo1.png', SPRITE_SCALING_CAR*1.25)
+        self.playerTwo.center_x = 600
+        self.playerTwo.center_y = 600
+        self.playerTwo_list.append(self.playerTwo)
+
+        self.all_sprites_list.append(self.playerTwo)
+        self.car_list.append(self.playerOne)
+
+        self.background = arcade.load_texture('CCSRainbowroad.png')
+        self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
+        self.physics_engine2 = arcade.PhysicsEngineSimple(self.playerTwo, self.car_list)
+
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH-200, SCREEN_HEIGHT, self.background)
+        self.all_sprites_list.draw()
+        self.car_list.draw()
+        self.manager.draw()
+
+        #need some type of interface in corners that show momentum, change in momentum,
+        #heading (in case someone wants to calculate components),
+
+    def on_key_press(self, key, modifiers):
+        if not self.movement:
+            return
+
+        if key == arcade.key.UP:
+            self.playerOne.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.playerOne.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.playerOne.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.playerOne.change_x = MOVEMENT_SPEED
+
+        if key == arcade.key.W:
+            self.playerTwo.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.S:
+            self.playerTwo.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.A:
+            self.playerTwo.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.D:
+            self.playerTwo.change_x = MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+
+        if not self.movement:
+            return
+
+        if key in [arcade.key.UP, arcade.key.DOWN]:
+            self.playerOne.change_y = 0
+        if key in [arcade.key.LEFT, arcade.key.RIGHT]:
+            self.playerOne.change_x = 0
+
+        if key in [arcade.key.W, arcade.key.S]:
+            self.playerTwo.change_y = 0
+        if key in [arcade.key.A, arcade.key.D]:
+            self.playerTwo.change_x = 0
+
+    def on_update(self, delta_time):
+
+        self.physics_engine.update()
+        self.physics_engine2.update()
+
+        self.all_sprites_list.update()
+        self.car_list.update()
+
+        if arcade.check_for_collision(self.playerOne, self.playerTwo):
+            self.collisions()
+
+
+        if self.playerOne.center_y < 0:
+            self.playerOne.center_y = 0
+        if self.playerOne.center_y > 700:
+            self.playerOne.center_y = 700
+        if self.playerOne.center_x < 0:
+            self.playerOne.center_x = 0
+        if self.playerOne.center_x > 666:
+            self.playerOne.center_x = 666
+
+        if self.playerTwo.center_y < 0:
+            self.playerTwo.center_y = 0
+        if self.playerTwo.center_y > 700:
+            self.playerTwo.center_y = 700
+        if self.playerTwo.center_x < 0:
+            self.playerTwo.center_x = 0
+        if self.playerTwo.center_x > 666:
+            self.playerTwo.center_x = 666
+
+    def collisions(self):
+        self.movement = False
+        self.playerOne.change_x = 0
+        self.playerOne.change_y = 0
+        self.playerTwo.change_x = 0
+        self.playerTwo.change_y = 0
+
+        self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
+        self.crash_player = arcade.play_sound(self.crash_sound)
+
+        self.crash_message = arcade.gui.UIMessageBox(
+            message_text='Crash! Cars have been disabled. Please reset.',
+            width=200,
+            height=200,
+            buttons = ["Ok"])
+
+        self.manager.add(self.crash_message)
+
+        self.crash_message.on_close = self.callback
+
+    def callback(self):
+        self.manager.remove(self.crash_message)
 
 def main():
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Car Crash Simulator 1000")
