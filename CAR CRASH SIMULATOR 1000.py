@@ -3,6 +3,7 @@
 import arcade
 import arcade.gui
 import math
+import time
 
 
 SPRITE_SCALING_CAR = 1
@@ -116,6 +117,7 @@ class LevelOne(arcade.View):
         self.movement = True
         self.show_velocities = True
 
+        self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
 
         @self.switch.event("on_click")
         def on_click(event):
@@ -160,6 +162,8 @@ class LevelOne(arcade.View):
 
             self.playerTwo.change_y = 0
             self.playerTwo.change_x = 0
+
+            self.show_velocities = True
 
             self.movement = True
 
@@ -280,7 +284,6 @@ class LevelOne(arcade.View):
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
             self.collisions()
 
-
         if self.playerOne.center_y < 0:
             self.playerOne.center_y = 0
         if self.playerOne.center_y > 700:
@@ -362,9 +365,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
