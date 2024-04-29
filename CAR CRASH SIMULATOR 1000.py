@@ -109,6 +109,7 @@ class LevelOne(arcade.View):
         self.car_list = arcade.SpriteList()
         self.playerOne_list = arcade.SpriteList()
         self.playerTwo_list = arcade.SpriteList()
+        self.playerCrash_list = arcade.SpriteList()
 
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -317,6 +318,14 @@ class LevelOne(arcade.View):
 
         self.final_x = ((self.mass_PO*self.playerOne.change_x)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_x)/(self.combined_mass))
         self.final_y = ((self.mass_PO*self.playerOne.change_y)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_y)/(self.combined_mass))
+
+        self.playerCrash = arcade.Sprite('carcrash.png',SPRITE_SCALING_CAR)
+        self.playerCrash_list.append(self.playerCrash)
+        self.playerOne_list.remove(self.playerOne)
+        for sprite in self.playerOne_list:
+              
+        self.playerTwo_list.remove(self.playerTwo)
+
 
 class PhysicsDashboard(arcade.View):
 
