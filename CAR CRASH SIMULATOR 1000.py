@@ -117,6 +117,8 @@ class LevelOne(arcade.View):
 
         self.movement = True
         self.show_velocities = True
+        self.collision = False
+        self.crashsprite = False
 
         self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
 
@@ -152,31 +154,42 @@ class LevelOne(arcade.View):
 
         @self.Reset_button.event("on_click")
         def on_click(event):
+            if len(self.all_sprites_list) == 0 and len(self.car_list) == 0:
+                self.playerOne = arcade.Sprite('CCSTessy1_Flipped.png', SPRITE_SCALING_CAR)
+
+
+                self.playerTwo = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
+
+
+                # Add back to sprite lists
+                self.all_sprites_list.append(self.playerTwo)
+                self.car_list.append(self.playerOne)
+
+                self.playerOne.change_y = 0
+                self.playerOne.change_x = 0
+
+                self.playerTwo.change_y = 0
+                self.playerTwo.change_x = 0
+
             self.playerOne.center_x = 50
             self.playerOne.center_y = 50
 
             self.playerTwo.center_x = 600
             self.playerTwo.center_y = 600
 
-            self.playerOne.change_y = 0
-            self.playerOne.change_x = 0
-
-            self.playerTwo.change_y = 0
-            self.playerTwo.change_x = 0
-
             self.show_velocities = True
-
             self.movement = True
+            self.collision = False
+            self.crashsprite = False
+            self.playerCrash_list = arcade.SpriteList()  # Clear any crash sprites
 
         self.playerOne = arcade.Sprite('CCSTessy1_Flipped.png', SPRITE_SCALING_CAR)
         self.playerOne.center_x = 50
         self.playerOne.center_y = 50
-        self.playerOne_list.append(self.playerOne)
 
         self.playerTwo = arcade.Sprite('CCSTessy1.png', SPRITE_SCALING_CAR)
         self.playerTwo.center_x = 600
         self.playerTwo.center_y = 600
-        self.playerTwo_list.append(self.playerTwo)
 
         self.all_sprites_list.append(self.playerTwo)
         self.car_list.append(self.playerOne)
@@ -189,6 +202,7 @@ class LevelOne(arcade.View):
     def on_draw(self):
         arcade.start_render()
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH-200, SCREEN_HEIGHT, self.background)
+
         self.all_sprites_list.draw()
         self.car_list.draw()
 
@@ -196,8 +210,12 @@ class LevelOne(arcade.View):
 
         arcade.draw_text('Player One', 750, 666, arcade.color.WHITE, 14, bold = True)
 
-        self.position = f"Position: {round(self.playerOne.center_x,2)},{round(self.playerOne.center_y,2)}"
-        arcade.draw_text(self.position, 715, 640, arcade.color.WHITE, 10)
+        if not self.crashsprite:
+            self.position = f"Position: {round(self.playerOne.center_x,2)},{round(self.playerOne.center_y,2)}"
+            arcade.draw_text(self.position, 715, 640, arcade.color.WHITE, 10)
+        else:
+            self.position = f"Position: {round(self.playerCrash.center_x, 2)},{round(self.playerCrash.center_y, 2)}"
+            arcade.draw_text(self.position, 715, 640, arcade.color.WHITE, 10)
 
         self.playerOne.angle = math.atan2(self.playerOne.change_y, self.playerOne.change_x)
         self.playerOne_angle_deg = math.degrees(self.playerOne.angle)
@@ -219,11 +237,19 @@ class LevelOne(arcade.View):
 
         arcade.draw_text('Player Two', 750, 400, arcade.color.WHITE, 14, bold=True)
 
-        self.position2 = f"Position: {round(self.playerTwo.center_x,2)},{round(self.playerTwo.center_y,2)}"
-        arcade.draw_text(self.position2, 715, 380, arcade.color.WHITE, 10)
+        if not self.crashsprite:
+            self.position2 = f"Position: {round(self.playerTwo.center_x,2)},{round(self.playerTwo.center_y,2)}"
+            arcade.draw_text(self.position2, 715, 380, arcade.color.WHITE, 10)
 
-        self.playerTwo.angle = math.atan2(self.playerTwo.change_y, self.playerTwo.change_x)
-        self.playerTwo_angle_deg = math.degrees(self.playerTwo.angle)
+            self.playerTwo.angle = math.atan2(self.playerTwo.change_y, self.playerTwo.change_x)
+            self.playerTwo_angle_deg = math.degrees(self.playerTwo.angle)
+        else:
+            self.position2 = f"Position: {round(self.playerCrash.center_x, 2)},{round(self.playerCrash.center_y, 2)}"
+            arcade.draw_text(self.position2, 715, 380, arcade.color.WHITE, 10)
+
+            self.playerTwo.angle = math.atan2(self.playerTwo.change_y, self.playerTwo.change_x)
+            self.playerTwo_angle_deg = math.degrees(self.playerTwo.angle)
+
 
         self.angle2 = f"Angle: {self.playerTwo_angle_deg}"
         arcade.draw_text(self.angle2, 715, 360, arcade.color.WHITE, 10)
@@ -237,10 +263,12 @@ class LevelOne(arcade.View):
             arcade.draw_text(f'Final Y-Velocity: {round(self.final_y, 2)}', 715, 320, arcade.color.WHITE, 10,
                              bold=True)
 
+        if self.collision:
+            self.playerOne.kill()
+            self.playerTwo.kill()
+            self.playerCrash_list.draw()
 
         self.manager.draw()
-
-
 
     def on_key_press(self, key, modifiers):
         if not self.movement:
@@ -286,6 +314,7 @@ class LevelOne(arcade.View):
 
         self.all_sprites_list.update()
         self.car_list.update()
+        self.playerCrash_list.update()
 
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
             self.collisions()
@@ -308,9 +337,20 @@ class LevelOne(arcade.View):
         if self.playerTwo.center_x > 666:
             self.playerTwo.center_x = 666
 
+        if self.crashsprite:
+            if self.playerCrash.center_y < 40:
+                self.playerCrash.center_y = 40
+            if self.playerCrash.center_y > 660:
+                self.playerCrash.center_y = 660
+            if self.playerCrash.center_x < 40:
+                self.playerCrash.center_x = 40
+            if self.playerCrash.center_x > 640:
+                self.playerCrash.center_x = 640
+
     def collisions(self):
         self.movement = False
         self.show_velocities = False
+        self.collision = True
 
         self.mass_PO = 10
         self.mass_PT = 50
@@ -319,12 +359,14 @@ class LevelOne(arcade.View):
         self.final_x = ((self.mass_PO*self.playerOne.change_x)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_x)/(self.combined_mass))
         self.final_y = ((self.mass_PO*self.playerOne.change_y)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_y)/(self.combined_mass))
 
-        self.playerCrash = arcade.Sprite('carcrash.png',SPRITE_SCALING_CAR)
-        self.playerCrash_list.append(self.playerCrash)
-        self.playerOne_list.remove(self.playerOne)
-        for sprite in self.playerOne_list:
-              
-        self.playerTwo_list.remove(self.playerTwo)
+        if not self.crashsprite:
+            self.playerCrash = arcade.Sprite('carcrash.png', SPRITE_SCALING_CAR)
+            self.playerCrash.center_x = (self.playerOne.center_x + self.playerTwo.center_x) / 2
+            self.playerCrash.center_y = (self.playerOne.center_y + self.playerTwo.center_y) / 2
+            self.playerCrash.change_x = self.final_x
+            self.playerCrash.change_y = self.final_y
+            self.playerCrash_list.append(self.playerCrash)
+            self.crashsprite = True
 
 
 class PhysicsDashboard(arcade.View):
