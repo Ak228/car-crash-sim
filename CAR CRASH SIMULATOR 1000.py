@@ -129,13 +129,14 @@ class LevelOne(arcade.View):
         self.playerOne_score = 0
         self.playerTwo_score = 0
 
+
         self.playerOne_mass = 10
-        self.playerOne_x_accel = 5
-        self.playerOne_y_accel = 5
+        self.playerOne_x_accel = 1
+        self.playerOne_y_accel = 1
 
         self.playerTwo_mass = 10
-        self.playerTwo_x_accel = 5
-        self.playerTwo_y_accel = 5
+        self.playerTwo_x_accel = 1
+        self.playerTwo_y_accel = 1
 
         self.keys = []
 
@@ -347,6 +348,7 @@ class LevelOne(arcade.View):
 
         if arcade.key.UP in self.keys:
             self.playerOne.change_y += self.playerOne_y_accel * delta_time
+            print(self.playerOne_mass)
         if arcade.key.DOWN in self.keys:
             self.playerOne.change_y -= self.playerOne_y_accel * delta_time
         if arcade.key.RIGHT in self.keys:
@@ -419,6 +421,10 @@ class LevelOne(arcade.View):
             self.movement = False
             self.show_velocities = False
             self.collision = True
+
+            self.all_sprites_list.remove(self.playerTwo)
+            self.car_list.remove(self.playerOne)
+
 
             self.mass_PO = self.playerOne_mass
             self.mass_PT =  self.playerTwo_mass
