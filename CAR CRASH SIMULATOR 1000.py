@@ -129,14 +129,37 @@ class LevelOne(arcade.View):
         self.playerOne_score = 0
         self.playerTwo_score = 0
 
+        #self.playerOne_mass = 10
+        #self.playerOne_x_accel = 3
+        #self.playerOne_y_accel = 3
 
-        self.playerOne_mass = 10
-        self.playerOne_x_accel = 1
-        self.playerOne_y_accel = 1
+        #self.playerTwo_mass = 10
+        #self.playerTwo_x_accel = 3
+        #self.playerTwo_y_accel = 3
 
-        self.playerTwo_mass = 10
-        self.playerTwo_x_accel = 1
-        self.playerTwo_y_accel = 1
+        if not hasattr(self,'settings'):
+            self.settings = {
+                'p1x_acceleration': 1,
+                'p1y_acceleration': 1,
+                'p1_mass': 10,
+
+                'p2x_acceleration': 1,
+                'p2y_acceleration': 1,
+                'p2_mass': 10
+            }
+
+        else:
+            self.settings = {
+                'p1x_acceleration': self.p1xacceleration,
+                'p1y_acceleration': self.p1yacceleration,
+                'p1_mass': self.p1mass,
+
+                'p2x_acceleration': self.p2xacceleration,
+                'p2y_acceleration': self.p2yacceleration,
+                'p2_mass': self.p2mass
+            }
+
+            self.update_settings(settings)
 
         self.keys = []
 
@@ -184,12 +207,13 @@ class LevelOne(arcade.View):
                 self.all_sprites_list.append(self.playerTwo)
                 self.car_list.append(self.playerOne)
 
-                self.keys = []
-                self.playerOne.change_y = 0
-                self.playerOne.change_x = 0
+            self.keys = []
 
-                self.playerTwo.change_y = 0
-                self.playerTwo.change_x = 0
+            self.playerOne.change_y = 0
+            self.playerOne.change_x = 0
+
+            self.playerTwo.change_y = 0
+            self.playerTwo.change_x = 0
 
             self.playerOne.center_x = 50
             self.playerOne.center_y = 50
@@ -320,6 +344,8 @@ class LevelOne(arcade.View):
 
     def update_settings(self, settings):
 
+        self.settings = settings
+
         self.playerOne_mass = settings['p1_mass']
         self.playerOne_x_accel = settings['p1x_acceleration']
         self.playerOne_y_accel = settings['p1y_acceleration']
@@ -339,31 +365,29 @@ class LevelOne(arcade.View):
 
         if not self.movement:
             return
+
         if key in self.keys:
             self.keys.remove(key)
-
-
 
     def on_update(self, delta_time):
 
         if arcade.key.UP in self.keys:
-            self.playerOne.change_y += self.playerOne_y_accel * delta_time
-            print(self.playerOne_mass)
+            self.playerOne.change_y += self.settings['p1y_acceleration'] * delta_time
         if arcade.key.DOWN in self.keys:
-            self.playerOne.change_y -= self.playerOne_y_accel * delta_time
+            self.playerOne.change_y -= self.settings['p1y_acceleration'] * delta_time
         if arcade.key.RIGHT in self.keys:
-            self.playerOne.change_x += self.playerOne_x_accel * delta_time
+            self.playerOne.change_x += self.settings['p1x_acceleration'] * delta_time
         if arcade.key.LEFT in self.keys:
-            self.playerOne.change_x -= self.playerOne_x_accel * delta_time
+            self.playerOne.change_x -= self.settings['p1y_acceleration'] * delta_time
 
         if arcade.key.W in self.keys:
-            self.playerTwo.change_y += self.playerTwo_y_accel * delta_time
+            self.playerTwo.change_y += self.settings['p2y_acceleration'] * delta_time
         if arcade.key.S in self.keys:
-            self.playerTwo.change_y -= self.playerTwo_y_accel * delta_time
+            self.playerTwo.change_y -= self.settings['p2y_acceleration'] * delta_time
         if arcade.key.D in self.keys:
-            self.playerTwo.change_x += self.playerTwo_x_accel * delta_time
+            self.playerTwo.change_x += self.settings['p2x_acceleration'] * delta_time
         if arcade.key.A in self.keys:
-            self.playerTwo.change_x -= self.playerTwo_x_accel * delta_time
+            self.playerTwo.change_x -= self.settings['p2x_acceleration'] * delta_time
 
         self.physics_engine.update()
         self.physics_engine2.update()
@@ -426,8 +450,8 @@ class LevelOne(arcade.View):
             self.car_list.remove(self.playerOne)
 
 
-            self.mass_PO = self.playerOne_mass
-            self.mass_PT =  self.playerTwo_mass
+            self.mass_PO = self.settings['p1_mass']
+            self.mass_PT =  self.settings['p2_mass']
             self.combined_mass = self.mass_PO + self.mass_PT
 
             self.final_x = ((self.mass_PO*self.playerOne.change_x)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_x)/(self.combined_mass))
@@ -457,8 +481,7 @@ class PhysicsDashboard(arcade.View):
 
         @self.exit.event("on_click")
         def on_click(event):
-            self.levelone = LevelOne(self)
-            self.window.show_view(self.levelone)
+            self.window.show_view(self.window.levelone)
 
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -470,8 +493,9 @@ class PhysicsDashboard(arcade.View):
 
         @self.upload.event("on_click")
         def on_click(event):
-            settings = self.upload_settings()
-            self.window.levelone.update_settings(settings)
+            self.settings = self.upload_settings()
+            self.window.levelone.update_settings(self.settings)
+
 
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -481,8 +505,8 @@ class PhysicsDashboard(arcade.View):
 
         #player one#
 
-        self.p1xacceleration_slider = UISlider(text="acceleration", width=200, value = 0)
-        self.p1xacceleration = self.p1xacceleration_slider.value / 33
+        self.p1xacceleration_slider = UISlider(text="acceleration", width=200, value = 1)
+        self.p1xacceleration = self.p1xacceleration_slider.value
         self.p1axlabel = arcade.gui.UILabel(text=f"player one acceleration: {self.p1xacceleration:02.0f}")
 
         @self.p1xacceleration_slider.event()
@@ -502,12 +526,8 @@ class PhysicsDashboard(arcade.View):
                 align_y=220,
                 child=self.p1axlabel))
 
-
-
-
-
-        self.p1yacceleration_slider = UISlider(text="acceleration", width=200, value = 0)
-        self.p1yacceleration = self.p1yacceleration_slider.value / 33
+        self.p1yacceleration_slider = UISlider(text="acceleration", width=200, value = 1)
+        self.p1yacceleration = self.p1yacceleration_slider.value
         self.p1aylabel = arcade.gui.UILabel(text=f"player one y acceleration: {self.p1yacceleration:02.0f}")
 
         @self.p1yacceleration_slider.event()
@@ -527,7 +547,7 @@ class PhysicsDashboard(arcade.View):
                 align_y=120,
                 child=self.p1aylabel))
 
-        self.p1mass_slider = UISlider(text="mass",width = 200, value = 0)
+        self.p1mass_slider = UISlider(text="mass",width = 200, value=10)
         self.p1mass = self.p1mass_slider.value
         self.p1masslabel = arcade.gui.UILabel(text = f"player one mass: {self.p1mass:02.0f}")
 
@@ -550,8 +570,8 @@ class PhysicsDashboard(arcade.View):
 
         #player two#
 
-        self.p2xacceleration_slider = UISlider(text="acceleration", width=200)
-        self.p2xacceleration = self.p2xacceleration_slider.value / 33
+        self.p2xacceleration_slider = UISlider(text="acceleration", width=200, value=1)
+        self.p2xacceleration = self.p2xacceleration_slider.value
         self.p2axlabel = arcade.gui.UILabel(text = f"player two x acceleration: {self.p2xacceleration:02.0f}")
 
         @self.p2xacceleration_slider.event()
@@ -571,8 +591,8 @@ class PhysicsDashboard(arcade.View):
                 align_y=220,
                 child=self.p2axlabel))
 
-        self.p2yacceleration_slider = UISlider(text="acceleration", width=200)
-        self.p2yacceleration = self.p2yacceleration_slider.value/33
+        self.p2yacceleration_slider = UISlider(text="acceleration", width=200, value=1)
+        self.p2yacceleration = self.p2yacceleration_slider.value
         self.p2aylabel = arcade.gui.UILabel(text= f"player two y acceleration: {self.p2yacceleration:02.0f}")
 
         @self.p2yacceleration_slider.event()
@@ -592,7 +612,7 @@ class PhysicsDashboard(arcade.View):
                 align_y=120,
                 child=self.p2aylabel))
 
-        self.p2mass_slider = UISlider(text="mass",width = 200)
+        self.p2mass_slider = UISlider(text="mass",width = 200, value=10)
         self.p2mass = self.p2mass_slider.value
         self.p2masslabel = arcade.gui.UILabel(text = f"player two mass: {self.p2mass:02.0f}")
 
