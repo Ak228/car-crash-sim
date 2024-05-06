@@ -4,10 +4,13 @@ CCS is a one or two person game that aims to teach students physics through simu
 
 CCS offers three distinct levels with different settings and cars that users can control with their WASD and arrow keys.
 
+Be wary of the pedestrians in each level! The player who hits the least pedestrians during each round is wins!
+
 Note that player one (car closest to the bottom) is controlled via arrow keys and player two is controlled via WASD keys. 
 
-Units:
-Mass (kg)
-Acceleration (m/s^2)
-Velocity (m/s)
-Momentum (kg • m/s)
+Beware the pedestrians! The person with the lowest score at the end of each round wins
+
+Default Settings:
+Mass = 10 kg
+Acceleration (x,y) = 1 m/s^2
+
