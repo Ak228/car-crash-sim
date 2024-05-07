@@ -326,7 +326,7 @@ class LevelOne(arcade.View):
 
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-        self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
+        self.switch = arcade.gui.UIFlatButton(text="Game Settings", width=125)
 
         self.movement = True
         self.show_velocities = True
@@ -572,6 +572,16 @@ class LevelOne(arcade.View):
 
     def on_update(self, delta_time):
 
+        for self.pedestrian in self.pedestrian_list:
+            self.pedestrian.center_x += self.pedestrian.change_x
+            self.pedestrian.center_y += self.pedestrian.change_y
+
+            if self.pedestrian.center_x < 0 or self.pedestrian.center_x > 666:
+                self.pedestrian.change_x *= -1
+
+            if self.pedestrian.center_y < 0 or self.pedestrian.center_y > SCREEN_HEIGHT:
+                self.pedestrian.change_y *= -1
+
         if arcade.key.UP in self.keys:
             self.playerOne.change_y += self.settings['p1y_acceleration'] * delta_time
             print(self.settings)
@@ -581,6 +591,16 @@ class LevelOne(arcade.View):
             self.playerOne.change_x += self.settings['p1x_acceleration'] * delta_time
         if arcade.key.LEFT in self.keys:
             self.playerOne.change_x -= self.settings['p1y_acceleration'] * delta_time
+        if arcade.key.RSHIFT in self.keys:
+            if self.playerOne.change_x < 0:
+                self.playerOne.change_x += (self.settings['p1x_acceleration'] * 3) * delta_time
+            if self.playerOne.change_y < 0:
+                self.playerOne.change_y += (self.settings['p1y_acceleration'] * 3) * delta_time
+
+            if self.playerOne.change_x > 0:
+                self.playerOne.change_x -= (self.settings['p1x_acceleration'] * 3) * delta_time
+            if self.playerOne.change_y > 0:
+                self.playerOne.change_y -= (self.settings['p1y_acceleration'] * 3) * delta_time
 
         if arcade.key.W in self.keys:
             self.playerTwo.change_y += self.settings['p2y_acceleration'] * delta_time
@@ -590,6 +610,16 @@ class LevelOne(arcade.View):
             self.playerTwo.change_x += self.settings['p2x_acceleration'] * delta_time
         if arcade.key.A in self.keys:
             self.playerTwo.change_x -= self.settings['p2x_acceleration'] * delta_time
+        if arcade.key.LSHIFT in self.keys:
+            if self.playerTwo.change_x < 0:
+                self.playerTwo.change_x += (self.settings['p2x_acceleration'] * 3) * delta_time
+            if self.playerTwo.change_y < 0:
+                self.playerTwo.change_y += (self.settings['p2y_acceleration'] * 3) * delta_time
+
+            if self.playerTwo.change_x > 0:
+                self.playerTwo.change_x -= (self.settings['p2x_acceleration'] * 3) * delta_time
+            if self.playerTwo.change_y > 0:
+                self.playerTwo.change_y -= (self.settings['p2y_acceleration'] * 3) * delta_time
 
         self.physics_engine.update()
         self.physics_engine2.update()
@@ -683,7 +713,7 @@ class LevelTwo(arcade.View):
 
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-        self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
+        self.switch = arcade.gui.UIFlatButton(text="Game Settings", width=125)
 
         self.movement = True
         self.show_velocities = True
@@ -791,6 +821,8 @@ class LevelTwo(arcade.View):
                 self.pedestrian.center_x = random.choice(self.ped_x_coordinates)
                 self.pedestrian.center_y = random.choice(self.ped_y_coordinates)
                 self.pedestrian_list.append(self.pedestrian)
+                self.pedestrian.change_x = random.choice([-1, 1])
+                self.pedestrian.change_y = random.choice([-1, 1])
 
         self.playerOne = arcade.Sprite('CCSBenz1_Flipped.png', SPRITE_SCALING_CAR*1.5)
         self.playerOne.center_x = 50
@@ -949,6 +981,16 @@ class LevelTwo(arcade.View):
             self.playerOne.change_x += self.settings['p1x_acceleration'] * delta_time
         if arcade.key.LEFT in self.keys:
             self.playerOne.change_x -= self.settings['p1y_acceleration'] * delta_time
+        if arcade.key.RSHIFT in self.keys:
+            if self.playerOne.change_x < 0:
+                self.playerOne.change_x += (self.settings['p1x_acceleration'] * 3) * delta_time
+            if self.playerOne.change_y < 0:
+                self.playerOne.change_y += (self.settings['p1y_acceleration'] * 3) * delta_time
+
+            if self.playerOne.change_x > 0:
+                self.playerOne.change_x -= (self.settings['p1x_acceleration'] * 3) * delta_time
+            if self.playerOne.change_y > 0:
+                self.playerOne.change_y -= (self.settings['p1y_acceleration'] * 3) * delta_time
 
         if arcade.key.W in self.keys:
             self.playerTwo.change_y += self.settings['p2y_acceleration'] * delta_time
@@ -958,6 +1000,16 @@ class LevelTwo(arcade.View):
             self.playerTwo.change_x += self.settings['p2x_acceleration'] * delta_time
         if arcade.key.A in self.keys:
             self.playerTwo.change_x -= self.settings['p2x_acceleration'] * delta_time
+        if arcade.key.LSHIFT in self.keys:
+            if self.playerTwo.change_x < 0:
+                self.playerTwo.change_x += (self.settings['p2x_acceleration'] * 3) * delta_time
+            if self.playerTwo.change_y < 0:
+                self.playerTwo.change_y += (self.settings['p2y_acceleration'] * 3) * delta_time
+
+            if self.playerTwo.change_x > 0:
+                self.playerTwo.change_x -= (self.settings['p2x_acceleration'] * 3) * delta_time
+            if self.playerTwo.change_y > 0:
+                self.playerTwo.change_y -= (self.settings['p2y_acceleration'] * 3) * delta_time
 
         self.physics_engine.update()
         self.physics_engine2.update()
@@ -1073,7 +1125,7 @@ class LevelThree(arcade.View):
 
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-        self.switch = arcade.gui.UIFlatButton(text="Physics Dashboard", width=125)
+        self.switch = arcade.gui.UIFlatButton(text="Game Settings", width=125)
 
         self.movement = True
         self.show_velocities = True
@@ -1176,7 +1228,7 @@ class LevelThree(arcade.View):
                 self.pedestrian = CircularPedestrian("CCS_Peds.png", SPRITE_SCALING_PEDESTRIAN)
 
                 # arcade academy
-                self.pedestrian.circle_center_x = random.choice(self.ped_x_coordinates)
+                self.pedestrian.circle_center_x = ((random.choice(self.ped_x_coordinates))-150)
                 self.pedestrian.circle_center_y = random.choice(self.ped_y_coordinates)
 
                 self.pedestrian.circle_radius = random.randrange(50, 70)
@@ -1328,6 +1380,8 @@ class LevelThree(arcade.View):
     def on_update(self, delta_time):
 
         for self.pedestrian in self.pedestrian_list:
+            self.pedestrian.center_x += self.pedestrian.change_x
+            self.pedestrian.center_y += self.pedestrian.change_y
 
             if self.pedestrian.center_x < 0 or self.pedestrian.center_x > 666:
                 self.pedestrian.change_x *= -1
@@ -1344,6 +1398,16 @@ class LevelThree(arcade.View):
             self.playerOne.change_x += self.settings['p1x_acceleration'] * delta_time
         if arcade.key.LEFT in self.keys:
             self.playerOne.change_x -= self.settings['p1y_acceleration'] * delta_time
+        if arcade.key.RSHIFT in self.keys:
+            if self.playerOne.change_x < 0:
+                self.playerOne.change_x += (self.settings['p1x_acceleration'] * 3) * delta_time
+            if self.playerOne.change_y < 0:
+                self.playerOne.change_y += (self.settings['p1y_acceleration'] * 3) * delta_time
+
+            if self.playerOne.change_x > 0:
+                self.playerOne.change_x -= (self.settings['p1x_acceleration'] * 3) * delta_time
+            if self.playerOne.change_y > 0:
+                self.playerOne.change_y -= (self.settings['p1y_acceleration'] * 3) * delta_time
 
         if arcade.key.W in self.keys:
             self.playerTwo.change_y += self.settings['p2y_acceleration'] * delta_time
@@ -1353,6 +1417,16 @@ class LevelThree(arcade.View):
             self.playerTwo.change_x += self.settings['p2x_acceleration'] * delta_time
         if arcade.key.A in self.keys:
             self.playerTwo.change_x -= self.settings['p2x_acceleration'] * delta_time
+        if arcade.key.LSHIFT in self.keys:
+            if self.playerTwo.change_x < 0:
+                self.playerTwo.change_x += (self.settings['p2x_acceleration'] * 3) * delta_time
+            if self.playerTwo.change_y < 0:
+                self.playerTwo.change_y += (self.settings['p2y_acceleration'] * 3) * delta_time
+
+            if self.playerTwo.change_x > 0:
+                self.playerTwo.change_x -= (self.settings['p2x_acceleration'] * 3) * delta_time
+            if self.playerTwo.change_y > 0:
+                self.playerTwo.change_y -= (self.settings['p2y_acceleration'] * 3) * delta_time
 
         self.physics_engine.update()
         self.physics_engine2.update()
