@@ -1038,6 +1038,28 @@ class LevelTwo(arcade.View):
 
             self.crash_sound.play()
 
+#from arcade academy
+class CircularPedestrian(arcade.Sprite):
+    def __init__(self,image,scale):
+        super().__init__(image,scale)
+
+        self.circle_angle = 0
+        self.circle_radius = 0
+        self.circle_speed = 0.075
+
+        self.circle_center_x = 0
+        self.circle_center_y = 0
+
+    def update(self):
+
+        self.center_x = self.circle_radius * math.sin(self.circle_angle) \
+                        + self.circle_center_x
+        self.center_y = self.circle_radius * math.cos(self.circle_angle) \
+                        + self.circle_center_y
+
+        self.circle_angle += self.circle_speed
+
+
 class LevelThree(arcade.View):
 
     def __init__(self,main_view):
@@ -1151,9 +1173,15 @@ class LevelThree(arcade.View):
             self.playerTwo_score = 0
 
             while len(self.pedestrian_list) < 15:
-                self.pedestrian = arcade.Sprite("CCS_Peds.png", SPRITE_SCALING_PEDESTRIAN)
-                self.pedestrian.center_x = random.choice(self.ped_x_coordinates)
-                self.pedestrian.center_y = random.choice(self.ped_y_coordinates)
+                self.pedestrian = CircularPedestrian("CCS_Peds.png", SPRITE_SCALING_PEDESTRIAN)
+
+                # arcade academy
+                self.pedestrian.circle_center_x = random.choice(self.ped_x_coordinates)
+                self.pedestrian.circle_center_y = random.choice(self.ped_y_coordinates)
+
+                self.pedestrian.circle_radius = random.randrange(50, 70)
+                self.pedestrian.circle_angle = random.random() * 2 * math.pi
+
                 self.pedestrian_list.append(self.pedestrian)
 
         self.playerOne = arcade.Sprite('CCSlambo1_Flipped.png', SPRITE_SCALING_CAR)
@@ -1168,15 +1196,22 @@ class LevelThree(arcade.View):
         self.car_list.append(self.playerOne)
 
         self.pedestrian_list = arcade.SpriteList()
-        self.ped_x_coordinates = list(range(50,666,30))
-        self.ped_y_coordinates = list(range(50,700,50))
 
+        self.ped_x_coordinates = list(range(50, 666, 30))
+        self.ped_y_coordinates = list(range(50, 700, 50))
+
+        #from arcade academy
         for i in range(15):
-            self.pedestrian = arcade.Sprite("CCS_Peds.png", SPRITE_SCALING_PEDESTRIAN)
-            self.pedestrian.center_x = random.choice(self.ped_x_coordinates)
-            self.pedestrian.center_y = random.choice(self.ped_y_coordinates)
-            self.pedestrian_list.append(self.pedestrian)
+            self.pedestrian = CircularPedestrian("CCS_Peds.png", SPRITE_SCALING_PEDESTRIAN)
 
+            #arcade academy
+            self.pedestrian.circle_center_x = random.choice(self.ped_x_coordinates)
+            self.pedestrian.circle_center_y = random.choice(self.ped_y_coordinates)
+
+            self.pedestrian.circle_radius = random.randrange(50, 70)
+            self.pedestrian.circle_angle = random.random() * 2 * math.pi
+
+            self.pedestrian_list.append(self.pedestrian)
 
         self.background = arcade.load_texture('CCSRainbowroad.png')
         self.physics_engine = arcade.PhysicsEngineSimple(self.playerOne, self.all_sprites_list)
@@ -1292,6 +1327,14 @@ class LevelThree(arcade.View):
 
     def on_update(self, delta_time):
 
+        for self.pedestrian in self.pedestrian_list:
+
+            if self.pedestrian.center_x < 0 or self.pedestrian.center_x > 666:
+                self.pedestrian.change_x *= -1
+
+            if self.pedestrian.center_y < 0 or self.pedestrian.center_y > SCREEN_HEIGHT:
+                self.pedestrian.change_y *= -1
+
         if arcade.key.UP in self.keys:
             self.playerOne.change_y += self.settings['p1y_acceleration'] * delta_time
             print(self.settings)
@@ -1398,3 +1441,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
