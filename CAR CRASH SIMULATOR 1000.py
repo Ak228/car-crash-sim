@@ -812,6 +812,8 @@ class LevelTwo(arcade.View):
             self.pedestrian.center_x = random.choice(self.ped_x_coordinates)
             self.pedestrian.center_y = random.choice(self.ped_y_coordinates)
             self.pedestrian_list.append(self.pedestrian)
+            self.pedestrian.change_x = random.choice([-1, 1])
+            self.pedestrian.change_y = random.choice([-1, 1])
 
 
         self.background = arcade.load_texture('CCSCitybackground.png')
@@ -927,6 +929,16 @@ class LevelTwo(arcade.View):
             self.keys.remove(key)
 
     def on_update(self, delta_time):
+
+        for self.pedestrian in self.pedestrian_list:
+            self.pedestrian.center_x += self.pedestrian.change_x
+            self.pedestrian.center_y += self.pedestrian.change_y
+
+            if self.pedestrian.center_x < 0 or self.pedestrian.center_x > 666:
+                self.pedestrian.change_x *= -1
+
+            if self.pedestrian.center_y < 0 or self.pedestrian.center_y > SCREEN_HEIGHT:
+                self.pedestrian.change_y *= -1
 
         if arcade.key.UP in self.keys:
             self.playerOne.change_y += self.settings['p1y_acceleration'] * delta_time
@@ -1109,10 +1121,8 @@ class LevelThree(arcade.View):
         @self.Reset_button.event("on_click")
         def on_click(event):
             if len(self.all_sprites_list) == 0 and len(self.car_list) == 0:
-                self.playerOne = arcade.Sprite('CCSlambo1.png_Flipped.png', SPRITE_SCALING_CAR)
-
-
-                self.playerTwo = arcade.Sprite('CCSlambo1.png.png', SPRITE_SCALING_CAR)
+                self.playerOne = arcade.Sprite('CCSlambo1_Flipped.png', SPRITE_SCALING_CAR)
+                self.playerTwo = arcade.Sprite('CCSlambo1.png', SPRITE_SCALING_CAR)
 
                 # Add back to sprite lists
                 self.all_sprites_list.append(self.playerTwo)
