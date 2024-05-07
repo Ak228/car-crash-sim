@@ -1,6 +1,6 @@
 Welcome to Car Crash Simulator 1000!
 
-CCS is a one or two person game that aims to teach students physics through simulated car crashes. We include a variety of physical concepts involved in the study of motion and collisions like momentum, impulse, acceleration, velocity, and mass. 
+CCS is a one or two person game that aims to teach students physics through simulated car crashes. We include a variety of physical concepts involved in the study of motion and collisions like momentum, acceleration, velocity, and mass. 
 
 CCS offers three distinct levels with different settings and cars that users can control with their WASD and arrow keys.
 
