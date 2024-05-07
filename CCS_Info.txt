@@ -4,8 +4,6 @@ CCS is a one or two person game that aims to teach students physics through simu
 
 CCS offers three distinct levels with different settings and cars that users can control with their WASD and arrow keys.
 
-Be wary of the pedestrians in each level! The player who hits the least pedestrians during each round is wins!
-
 Note that player one (car closest to the bottom) is controlled via arrow keys and player two is controlled via WASD keys. Use the shift key closest to your respective movement keys to brake.
 
 Beware the pedestrians! The person with the lowest score at the end of each round wins
