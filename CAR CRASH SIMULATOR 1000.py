@@ -334,6 +334,7 @@ class LevelOne(arcade.View):
         self.crashsprite = False
 
         self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
+        self.scream_sound = arcade.Sound("man-scream-121085.wav")
 
         self.playerOne_score = 0
         self.playerTwo_score = 0
@@ -636,10 +637,13 @@ class LevelOne(arcade.View):
         for self.pedestrian in self.hit_list:
             self.playerOne_score += 1
             self.pedestrian.kill()
+            self.scream_sound.play()
 
         for self.pedestrian in self.hit_list2:
             self.playerTwo_score += 1
             self.pedestrian.kill()
+            self.scream_sound.play()
+
 
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
             self.collisions()
@@ -721,6 +725,7 @@ class LevelTwo(arcade.View):
         self.crashsprite = False
 
         self.crash_sound = arcade.Sound("CCScar-crash-edited_2ojEpOXe.wav")
+        self.scream_sound = arcade.Sound("man-scream-121085.wav")
 
         self.playerOne_score = 0
         self.playerTwo_score = 0
@@ -1026,10 +1031,12 @@ class LevelTwo(arcade.View):
         for self.pedestrian in self.hit_list:
             self.playerOne_score += 1
             self.pedestrian.kill()
+            self.scream_sound.play()
 
         for self.pedestrian in self.hit_list2:
             self.playerTwo_score += 1
             self.pedestrian.kill()
+            self.scream_sound.play()
 
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
             self.collisions()
@@ -1133,6 +1140,7 @@ class LevelThree(arcade.View):
         self.crashsprite = False
 
         self.crash_sound = arcade.Sound("TEYOBANG.wav")
+        self.scream_sound = arcade.Sound("man-scream-121085.wav")
 
         self.playerOne_score = 0
         self.playerTwo_score = 0
@@ -1443,10 +1451,12 @@ class LevelThree(arcade.View):
         for self.pedestrian in self.hit_list:
             self.playerOne_score += 1
             self.pedestrian.kill()
+            self.scream_sound.play()
 
         for self.pedestrian in self.hit_list2:
             self.playerTwo_score += 1
             self.pedestrian.kill()
+            self.scream_sound.play()
 
         if arcade.check_for_collision(self.playerOne, self.playerTwo):
             self.collisions()
