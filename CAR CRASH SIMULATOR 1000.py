@@ -1080,7 +1080,7 @@ class LevelTwo(arcade.View):
             self.final_y = ((self.mass_PO*self.playerOne.change_y)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_y)/(self.combined_mass))
 
             if not self.crashsprite:
-                self.playerCrash = arcade.Sprite('carcrash.png', SPRITE_SCALING_CAR)
+                self.playerCrash = arcade.Sprite('benscarcrash.png', SPRITE_SCALING_CAR)
                 self.playerCrash.center_x = (self.playerOne.center_x + self.playerTwo.center_x) / 2
                 self.playerCrash.center_y = (self.playerOne.center_y + self.playerTwo.center_y) / 2
                 self.playerCrash.change_x = self.final_x
@@ -1497,7 +1497,7 @@ class LevelThree(arcade.View):
             self.final_y = ((self.mass_PO*self.playerOne.change_y)/(self.combined_mass)) +((self.mass_PT*self.playerTwo.change_y)/(self.combined_mass))
 
             if not self.crashsprite:
-                self.playerCrash = arcade.Sprite('carcrash.png', SPRITE_SCALING_CAR)
+                self.playerCrash = arcade.Sprite('lambocarcrash.png', SPRITE_SCALING_CAR)
                 self.playerCrash.center_x = (self.playerOne.center_x + self.playerTwo.center_x) / 2
                 self.playerCrash.center_y = (self.playerOne.center_y + self.playerTwo.center_y) / 2
                 self.playerCrash.change_x = self.final_x
